@@ -1,38 +1,48 @@
-import React from 'react';
-import Button from '@mui/material/Button';
+import React from "react";
+import Button from "@mui/material/Button";
 
-import styles from './Header.module.scss';
-import Container from '@mui/material/Container';
-import { Link } from 'react-router-dom';
+import styles from "./Header.module.scss";
+import Container from "@mui/material/Container";
+import { Link } from "react-router-dom";
+import {
+  _ADD_POST_ROUTE,
+  _HOME_ROUTE,
+  _LOGIN_ROUTE,
+  _REGISTER_ROUTE,
+} from "../../utils/constants";
 
 export const Header = () => {
-  const isAuth = false;
+  const isAuth = true;
 
   const onClickLogout = () => {};
 
   return (
     <div className={styles.root}>
-      <Container maxWidth="lg">
+      <Container maxWidth="md">
         <div className={styles.inner}>
-          <Link className={styles.logo} to="/">
+          <Link className={styles.logo} to={_HOME_ROUTE}>
             <div>BLOG APP</div>
           </Link>
           <div className={styles.buttons}>
             {isAuth ? (
               <>
-                <Link to="/posts/create">
+                <Link to={_ADD_POST_ROUTE}>
                   <Button variant="contained">Create post</Button>
                 </Link>
-                <Button onClick={onClickLogout} variant="contained" color="error">
+                <Button
+                  onClick={onClickLogout}
+                  variant="contained"
+                  color="error"
+                >
                   Logout
                 </Button>
               </>
             ) : (
               <>
-                <Link to="/login">
+                <Link to={_LOGIN_ROUTE}>
                   <Button variant="outlined">Login</Button>
                 </Link>
-                <Link to="/register">
+                <Link to={_REGISTER_ROUTE}>
                   <Button variant="contained">Register</Button>
                 </Link>
               </>

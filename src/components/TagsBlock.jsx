@@ -1,15 +1,15 @@
 import React from "react";
 
+import TagIcon from "@mui/icons-material/Tag";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import TagIcon from "@mui/icons-material/Tag";
 import ListItemText from "@mui/material/ListItemText";
 import Skeleton from "@mui/material/Skeleton";
-
-import { SideBlock } from "./SideBlock";
 import { Link } from "react-router-dom";
+import { _TAGS_ROUTE } from "../utils/constants";
+import { SideBlock } from "./SideBlock";
 
 export const TagsBlock = ({ items, isLoading = true }) => {
   return (
@@ -18,7 +18,7 @@ export const TagsBlock = ({ items, isLoading = true }) => {
         {(isLoading ? [...Array(5)] : items).map((name, i) => (
           <Link
             style={{ textDecoration: "none", color: "black" }}
-            to={`/tags/${name}`}
+            to={`${_TAGS_ROUTE}/${name}`}
           >
             <ListItem key={i} disablePadding>
               <ListItemButton>
