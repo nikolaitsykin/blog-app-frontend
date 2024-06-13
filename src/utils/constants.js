@@ -1,6 +1,7 @@
 export const _HOME_ROUTE = "/";
-export const _LOGIN_ROUTE = "/login";
-export const _REGISTER_ROUTE = "/register";
+export const _LOGIN_ROUTE = "/auth/login";
+export const _AUTH_ME_ROUTE = "/auth/me";
+export const _REGISTER_ROUTE = "/auth/register";
 export const _POSTS_ROUTE = "/posts";
 export const _POST_ROUTE = "/posts/:id";
 export const _ADD_POST_ROUTE = "/posts/add";

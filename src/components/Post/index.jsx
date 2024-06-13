@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import { _POSTS_ROUTE, _TAGS_ROUTE } from "../../utils/constants";
 
 export const Post = ({
-  _id,
+  id,
   title,
   createdAt,
   imageUrl,
@@ -35,7 +35,7 @@ export const Post = ({
     <div className={clsx(styles.root, { [styles.rootFull]: isFullPost })}>
       {isEditable && (
         <div className={styles.editButtons}>
-          <Link to={`${_POSTS_ROUTE}/${_id}/edit`}>
+          <Link to={`${_POSTS_ROUTE}/${id}/edit`}>
             <IconButton color="primary">
               <EditIcon />
             </IconButton>
@@ -61,7 +61,7 @@ export const Post = ({
             {isFullPost ? (
               title
             ) : (
-              <Link to={`${_POSTS_ROUTE}/${_id}`}>{title}</Link>
+              <Link to={`${_POSTS_ROUTE}/${id}`}>{title}</Link>
             )}
           </h2>
           <ul className={styles.tags}>

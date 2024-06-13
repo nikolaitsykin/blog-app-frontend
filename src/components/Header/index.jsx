@@ -10,11 +10,18 @@ import {
   _LOGIN_ROUTE,
   _REGISTER_ROUTE,
 } from "../../utils/constants";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, selectIsAuth } from "../../redux/slices/authSlice";
 
 export const Header = () => {
-  const isAuth = true;
+  const dispatch = useDispatch();
+  const isAuth = useSelector(selectIsAuth);
 
-  const onClickLogout = () => {};
+  const onClickLogout = () => {
+    if (window.confirm("Are you sure you want to log out?")) {
+      dispatch(logout());
+    }
+  };
 
   return (
     <div className={styles.root}>

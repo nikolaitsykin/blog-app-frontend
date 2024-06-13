@@ -32,8 +32,8 @@ const postSlice = createSlice({
       .addCase(fetchPosts.pending, (state) => {
         state.posts.status = "loading";
       })
-      .addCase(fetchPosts.fulfilled, (state, action) => {
-        state.posts.items = action.payload;
+      .addCase(fetchPosts.fulfilled, (state, { payload }) => {
+        state.posts.items = payload;
         state.posts.status = "loaded";
       })
       .addCase(fetchPosts.rejected, (state) => {
@@ -42,8 +42,8 @@ const postSlice = createSlice({
       .addCase(fetchTags.pending, (state) => {
         state.tags.status = "loading";
       })
-      .addCase(fetchTags.fulfilled, (state, action) => {
-        state.tags.items = action.payload;
+      .addCase(fetchTags.fulfilled, (state, { payload }) => {
+        state.tags.items = payload;
         state.tags.status = "loaded";
       })
       .addCase(fetchTags.rejected, (state) => {

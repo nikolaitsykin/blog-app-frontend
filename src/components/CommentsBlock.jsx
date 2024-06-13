@@ -14,7 +14,7 @@ export const CommentsBlock = ({ items, children, isLoading = true }) => {
       <List>
         {(isLoading ? [...Array(5)] : items).map((obj, index) => (
           <React.Fragment key={index}>
-            <ListItem alignItems="flex-start">
+            <ListItem key={index} alignItems="flex-start">
               <ListItemAvatar>
                 {isLoading ? (
                   <Skeleton variant="circular" width={40} height={40} />
