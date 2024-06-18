@@ -6,11 +6,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { CommentsBlock } from "../components/CommentsBlock";
 import { Post } from "../components/Post";
 import { TagsBlock } from "../components/TagsBlock";
-import { fetchPosts, fetchTags } from "../redux/slices/postSlice";
+import { fetchPosts, fetchTags } from "../redux/actions/postsActions";
 
 export const Home = () => {
   const dispatch = useDispatch();
+  const userData = useSelector((state) => state.auth.data)
   const { posts, tags } = useSelector((state) => state.posts);
+
+  // const isEditable = Boolean(userData?._id === post.user?._id);
+  
 
   const isPostsLoading = posts.status === "loading";
   const isTagsLoading = tags.status === "loading";
@@ -46,7 +50,7 @@ export const Home = () => {
                 viewsCount={obj.viewsCount}
                 commentsCount={3}
                 tags={obj.tags}
-                isEditable
+                isEditable={ (userData?._id === obj.user._id)}
               />
             )
           )}

@@ -1,70 +1,165 @@
-import React from 'react';
-import TextField from '@mui/material/TextField';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
-import SimpleMDE from 'react-simplemde-editor';
-
-import 'easymde/dist/easymde.min.css';
-import styles from './AddPost.module.scss';
+import Button from "@mui/material/Button";
+import Paper from "@mui/material/Paper";
+import TextField from "@mui/material/TextField";
+import "easymde/dist/easymde.min.css";
+import React from "react";
+import { useSelector } from "react-redux";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import SimpleMDE from "react-simplemde-editor";
+import { selectIsAuth } from "../../redux/slices/authSlice";
+import axios from "../../utils/axios";
+import {
+  _BASE_URL,
+  _HOME_ROUTE,
+  _POSTS_ROUTE,
+  _UPLOAD_URL,
+} from "../../utils/constants";
+import styles from "./AddPost.module.scss";
 
 export const AddPost = () => {
-  const imageUrl = '';
-  const [value, setValue] = React.useState('');
+  const navigate = useNavigate();
+  const isAuth = useSelector(selectIsAuth);
+  const token = window.localStorage.getItem("token");
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [fields, setFields] = React.useState({
+    title: "",
+    text: "",
+    tags: "",
+    imageUrl: "",
+  });
 
-  const handleChangeFile = () => {};
-
-  const onClickRemoveImage = () => {};
-
-  const onChange = React.useCallback((value) => {
-    setValue(value);
+  const onChange = React.useCallback((field, value) => {
+    setFields((prevForm) => ({
+      ...prevForm,
+      [field]: value,
+    }));
   }, []);
+
+  const inputFileRef = React.useRef(null);
+
+  const handleChangeFile = async (e) => {
+    try {
+      const file = e.target.files[0];
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const { data } = await axios.post(`${_UPLOAD_URL}`, formData);
+      setFields((prev) => ({ ...prev, imageUrl: data.url }));
+    } catch (error) {
+      console.warn(error);
+      alert("Error upload file");
+    }
+  };
+
+  const onClickRemoveImage = () => {
+    setFields((prev) => ({ ...prev, imageUrl: "" }));
+  };
 
   const options = React.useMemo(
     () => ({
       spellChecker: false,
-      maxHeight: '200px',
+      maxHeight: "200px",
       autofocus: true,
-      placeholder: 'Type here...',
+      placeholder: "Type here...",
       status: false,
       autosave: {
         enabled: true,
         delay: 1000,
       },
     }),
-    [],
+    []
   );
+
+  const onSubmit = async () => {
+    try {
+      setIsLoading(true);
+      const fieldsCopy = { ...fields, tags: fields.tags.split(",") };
+      console.log(fieldsCopy);
+      const { data } = await axios.post(`${_POSTS_ROUTE}`, fieldsCopy);
+      const id = data._id;
+      navigate(`${_POSTS_ROUTE}/${id}`);
+    } catch (error) {
+      console.warn(error);
+      alert("Error create post");
+    }
+  };
+
+  if (!isAuth && !token) {
+    return <Navigate to={_HOME_ROUTE} />;
+  }
 
   return (
     <Paper elevation={0} style={{ padding: 30 }}>
-      <Button variant="outlined" size="large">
+      <Button
+        style={{ marginRight: 10 }}
+        onClick={(e) => inputFileRef.current.click()}
+        variant="outlined"
+        size="medium"
+      >
         Load preview
       </Button>
-      <input type="file" onChange={handleChangeFile} hidden />
-      {imageUrl && (
-        <Button variant="contained" color="error" onClick={onClickRemoveImage}>
-          Delete
-        </Button>
-      )}
-      {imageUrl && (
-        <img className={styles.image} src={`http://localhost:4444${imageUrl}`} alt="Uploaded" />
+      <input
+        ref={inputFileRef}
+        type="file"
+        onChange={handleChangeFile}
+        hidden
+      />
+      {fields.imageUrl && (
+        <>
+          <Button
+            variant="contained"
+            color="error"
+            size="medium"
+            onClick={onClickRemoveImage}
+          >
+            Delete
+          </Button>
+          <img
+            className={styles.image}
+            src={`${_BASE_URL}${fields.imageUrl}`}
+            alt="Uploaded"
+          />
+        </>
       )}
       <br />
       <br />
       <TextField
+        id="title"
+        value={fields.title}
+        onChange={(e) => onChange("title", e.target.value)}
         classes={{ root: styles.title }}
         variant="standard"
         placeholder="Post title..."
         fullWidth
       />
-      <TextField classes={{ root: styles.tags }} variant="standard" placeholder="Tags" fullWidth />
-      <SimpleMDE className={styles.editor} value={value} onChange={onChange} options={options} />
+      <TextField
+        id="tags"
+        value={fields.tags}
+        onChange={(e) => onChange("tags", e.target.value)}
+        classes={{ root: styles.tags }}
+        variant="standard"
+        placeholder="Tags"
+        fullWidth
+      />
+      <SimpleMDE
+        id="text"
+        className={styles.editor}
+        value={fields.text}
+        onChange={(text) => setFields({ ...fields, text })}
+        options={options}
+      />
       <div className={styles.buttons}>
-        <Button size="large" variant="contained">
+        <Button
+          type="submit"
+          onClick={onSubmit}
+          size="large"
+          variant="contained"
+        >
           Post
         </Button>
-        <a href="/">
+        <Link to="/">
           <Button size="large">Cancel</Button>
-        </a>
+        </Link>
       </div>
     </Paper>
   );

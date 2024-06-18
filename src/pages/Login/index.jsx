@@ -2,7 +2,7 @@ import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
@@ -14,6 +14,9 @@ import styles from "./Login.module.scss";
 export const Login = () => {
   const isAuth = useSelector(selectIsAuth);
   const dispatch = useDispatch();
+
+  const { error, errorPath } = useSelector((state) => state.auth);
+
   const {
     register,
     handleSubmit,
@@ -27,11 +30,18 @@ export const Login = () => {
     mode: "onChange",
   });
 
-  console.log("isAuth", isAuth);
-
   const onSubmit = (values) => {
     dispatch(userLogin(values));
   };
+
+  useEffect(() => {
+    if (error) {
+      setError(`${errorPath}`, {
+        type: "custom",
+        message: error,
+      });
+    }
+  }, [error]);
 
   if (isAuth) {
     return <Navigate to={_HOME_ROUTE} />;
@@ -47,7 +57,7 @@ export const Login = () => {
           className={styles.field}
           label="E-Mail"
           type="email"
-          error={Boolean(errors.email?.message)}
+          error={Boolean(errors?.email?.message)}
           helperText={errors.email?.message}
           {...register("email", { required: "Enter your email" })}
           fullWidth
@@ -55,7 +65,7 @@ export const Login = () => {
         <TextField
           className={styles.field}
           label="Password"
-          error={Boolean(errors.password?.message)}
+          error={Boolean(errors?.password?.message)}
           helperText={errors.password?.message}
           {...register("password", { required: "Enter your password" })}
           fullWidth

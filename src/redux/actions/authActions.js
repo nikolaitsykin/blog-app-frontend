@@ -6,6 +6,7 @@ import {
   _REGISTER_ROUTE,
 } from "../../utils/constants";
 
+
 export const userLogin = createAsyncThunk(
   "auth/login",
   async (params, { rejectWithValue }) => {
@@ -27,9 +28,10 @@ export const userLogin = createAsyncThunk(
     } catch (error) {
       // return custom error message from API if any
       if (error.response && error.response.data.message) {
+        console.log(error.response.data.message);
         return rejectWithValue(error.response.data.message);
       } else {
-        return rejectWithValue(error.message);
+        return rejectWithValue(error.response);
       }
     }
   }
@@ -56,9 +58,10 @@ export const userRegister = createAsyncThunk(
     } catch (error) {
       // return custom error message from API if any
       if (error.response && error.response.data.message) {
+        console.log(error.response.data.message);
         return rejectWithValue(error.response.data.message);
       } else {
-        return rejectWithValue(error.message);
+        return rejectWithValue(error.response);
       }
     }
   }

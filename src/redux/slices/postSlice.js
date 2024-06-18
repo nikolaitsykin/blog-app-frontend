@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchPosts, fetchTags } from "../actions/postActions";
+import { fetchPosts, fetchTags } from "../actions/postsActions";
 
 const initialState = {
   posts: {

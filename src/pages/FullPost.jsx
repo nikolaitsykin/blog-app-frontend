@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from "react";
-
-import { Post } from "../components/Post";
+import { useParams } from "react-router-dom";
 import { AddComment } from "../components/AddComment";
 import { CommentsBlock } from "../components/CommentsBlock";
-import { useParams } from "react-router-dom";
-import axios from "../utils/axios";
-import { _POSTS_ROUTE } from "../utils/constants";
+import { Post } from "../components/Post";
+import { _BASE_URL } from "../utils/constants";
+import { getPosts } from "../utils/heplers";
 
 export const FullPost = () => {
   const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
+  const isImage = data?.imageUrl ? `${_BASE_URL}${data.imageUrl}` : null;
 
   useEffect(() => {
-    axios
-      .get(`${_POSTS_ROUTE}/${id}`)
+    getPosts(id)
       .then((res) => {
-        setData(res.data);
+        setData(res);
         setIsLoading(false);
       })
       .catch((error) => {
@@ -34,7 +33,7 @@ export const FullPost = () => {
         key={data._id}
         id={data._id}
         title={data.title}
-        imageUrl={data.imageUrl}
+        imageUrl={isImage}
         user={data.user}
         createdAt={data.createdAt}
         viewsCount={data.viewsCount}
