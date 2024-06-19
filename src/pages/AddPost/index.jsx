@@ -21,6 +21,7 @@ export const AddPost = () => {
   const isAuth = useSelector(selectIsAuth);
   const token = window.localStorage.getItem("token");
   const [isLoading, setIsLoading] = React.useState(false);
+  const inputFileRef = React.useRef(null);
   const [fields, setFields] = React.useState({
     title: "",
     text: "",
@@ -35,15 +36,15 @@ export const AddPost = () => {
     }));
   }, []);
 
-  const inputFileRef = React.useRef(null);
-
   const handleChangeFile = async (e) => {
     try {
       const file = e.target.files[0];
+      console.log(file);
       const formData = new FormData();
       formData.append("image", file);
 
       const { data } = await axios.post(`${_UPLOAD_URL}`, formData);
+      console.log(data);
       setFields((prev) => ({ ...prev, imageUrl: data.url }));
     } catch (error) {
       console.warn(error);
@@ -74,7 +75,6 @@ export const AddPost = () => {
     try {
       setIsLoading(true);
       const fieldsCopy = { ...fields, tags: fields.tags.split(",") };
-      console.log(fieldsCopy);
       const { data } = await axios.post(`${_POSTS_ROUTE}`, fieldsCopy);
       const id = data._id;
       navigate(`${_POSTS_ROUTE}/${id}`);

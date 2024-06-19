@@ -7,14 +7,14 @@ import { CommentsBlock } from "../components/CommentsBlock";
 import { Post } from "../components/Post";
 import { TagsBlock } from "../components/TagsBlock";
 import { fetchPosts, fetchTags } from "../redux/actions/postsActions";
+import { _BASE_URL } from "../utils/constants";
 
 export const Home = () => {
   const dispatch = useDispatch();
-  const userData = useSelector((state) => state.auth.data)
+  const userData = useSelector((state) => state.auth.data);
   const { posts, tags } = useSelector((state) => state.posts);
 
-  // const isEditable = Boolean(userData?._id === post.user?._id);
-  
+  const uniqueTags = [...new Set(tags.items)];
 
   const isPostsLoading = posts.status === "loading";
   const isTagsLoading = tags.status === "loading";
@@ -44,19 +44,19 @@ export const Home = () => {
                 key={index}
                 id={obj._id}
                 title={obj.title}
-                imageUrl={obj.imageUrl}
+                imageUrl={obj.imageUrl ? `${_BASE_URL}${obj.imageUrl}` : null}
                 user={obj.user}
                 createdAt={obj.createdAt}
                 viewsCount={obj.viewsCount}
                 commentsCount={3}
                 tags={obj.tags}
-                isEditable={ (userData?._id === obj.user._id)}
+                isEditable={userData?._id === obj.user._id}
               />
             )
           )}
         </Grid>
         <Grid xs={4} item>
-          <TagsBlock items={tags.items} isLoading={isTagsLoading} />
+          <TagsBlock items={uniqueTags} isLoading={isTagsLoading} />
           <CommentsBlock
             items={[
               {

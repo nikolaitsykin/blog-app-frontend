@@ -15,7 +15,7 @@ export const TagsBlock = ({ items, isLoading }) => {
   return (
     <SideBlock title="Tags">
       <List>
-        {(isLoading ? [...Array(5)] : items).map((name, index) => (
+        {(isLoading ? [...Array(3)] : items).map((name, index) => (
           <Link
             key={index}
             style={{ textDecoration: "none", color: "black" }}

@@ -32,6 +32,7 @@ export const Post = ({
     return <PostSkeleton />;
   }
 
+
   const onClickRemove = () => {
     if (window.confirm("Do you really want to delete an article?")) {
       dispatch(fetchRemovePost(id));
