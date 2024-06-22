@@ -11,15 +11,17 @@ import { Link } from "react-router-dom";
 import { _TAGS_ROUTE } from "../utils/constants";
 import { SideBlock } from "./SideBlock";
 
-export const TagsBlock = ({ items, isLoading }) => {
+export const TagsBlock = ({ items, isLoading = true }) => {
+  const uniqueTags = [...new Set(items)];
+
   return (
     <SideBlock title="Tags">
       <List>
-        {(isLoading ? [...Array(3)] : items).map((name, index) => (
+        {(isLoading ? [...Array(3)] : uniqueTags).map((name, index) => (
           <Link
-            key={index}
             style={{ textDecoration: "none", color: "black" }}
             to={`${_TAGS_ROUTE}/${name}`}
+            key={index}
           >
             <ListItem key={index} disablePadding>
               <ListItemButton>

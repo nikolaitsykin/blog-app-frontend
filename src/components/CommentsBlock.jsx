@@ -1,25 +1,58 @@
-import React from "react";
-import { SideBlock } from "./SideBlock";
-import ListItem from "@mui/material/ListItem";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import Avatar from "@mui/material/Avatar";
-import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 import Skeleton from "@mui/material/Skeleton";
+import React from "react";
+import { useSelector } from "react-redux";
+import axios from "../utils/axios";
+import { _COMMENTS_ROUTE } from "../utils/constants";
+import { SideBlock } from "./SideBlock";
 
-export const CommentsBlock = ({ items, children, isLoading = true }) => {
+export const CommentsBlock = ({
+  data,
+  comments,
+  setComments,
+  children,
+  authorId,
+  isLoading = true,
+}) => {
+  const [value, setValue] = React.useState("");
+  const userDataId = useSelector((state) => state.auth.data?._id);
+
+  const removeComment = async (value) => {
+    try {
+      setValue(value);
+      const commentsNew = comments.filter((obj) => obj.text !== value);
+      setComments(commentsNew);
+
+      const fields = {
+        ...data,
+        comments: commentsNew,
+      };
+
+      await axios.post(`${_COMMENTS_ROUTE}${data._id}`, fields);
+    } catch (err) {
+      console.warn(err);
+      alert("Error when deleting a comment!");
+    }
+  };
+
   return (
     <SideBlock title="Comments">
       <List>
-        {(isLoading ? [...Array(5)] : items).map((obj, index) => (
+        {(isLoading ? [...Array(5)] : comments)?.map((obj, index) => (
           <React.Fragment key={index}>
-            <ListItem key={index} alignItems="flex-start">
+            <ListItem alignItems="flex-start">
               <ListItemAvatar>
                 {isLoading ? (
                   <Skeleton variant="circular" width={40} height={40} />
                 ) : (
-                  <Avatar alt={obj.user.name} src={obj.user.avatarUrl} />
+                  <Avatar alt={obj.user.name}  src={obj.user.avatarUrl} />
                 )}
               </ListItemAvatar>
               {isLoading ? (
@@ -29,9 +62,20 @@ export const CommentsBlock = ({ items, children, isLoading = true }) => {
                 </div>
               ) : (
                 <ListItemText
-                  primary={obj.user.name}
+                  primary={obj.user.fullName}
                   secondary={obj.text}
+                  value={obj.text}
                 />
+              )}
+              {userDataId === authorId && userDataId !== undefined ? (
+                <ListItemIcon
+                    style={{ cursor: "pointer"}}
+                  onClick={() => removeComment(obj.text)}
+                >
+                  <DeleteForeverIcon/>
+                </ListItemIcon>
+              ) : (
+                ""
               )}
             </ListItem>
             <Divider variant="inset" component="li" />

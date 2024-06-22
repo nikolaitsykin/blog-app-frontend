@@ -3,30 +3,33 @@ import { useParams } from "react-router-dom";
 import { AddComment } from "../components/AddComment";
 import { CommentsBlock } from "../components/CommentsBlock";
 import { Post } from "../components/Post";
-import { _BASE_URL } from "../utils/constants";
-import { getPosts } from "../utils/heplers";
+import axios from "../utils/axios";
+import { _BASE_URL, _POSTS_ROUTE } from "../utils/constants";
 
 export const FullPost = () => {
   const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const [comments, setComments] = React.useState("");
   const { id } = useParams();
   const isImage = data?.imageUrl ? `${_BASE_URL}${data.imageUrl}` : null;
 
   useEffect(() => {
-    getPosts(id)
+    axios
+      .get(`${_POSTS_ROUTE}/${id}`)
       .then((res) => {
-        setData(res);
+        setData(res.data);
+        setComments(res.data.comments);
         setIsLoading(false);
       })
       .catch((error) => {
         console.warn(error);
+        alert("Error getting article");
       });
   }, []);
 
   if (isLoading) {
     return <Post isLoading={isLoading} isFullPost />;
   }
-
   return (
     <>
       <Post
@@ -37,32 +40,26 @@ export const FullPost = () => {
         user={data.user}
         createdAt={data.createdAt}
         viewsCount={data.viewsCount}
-        commentsCount={data.commentsCount}
+        commentsCount={data.comments.length}
         tags={data.tags}
+        isEditable
         isFullPost
       >
         <p>{data.text}</p>
       </Post>
       <CommentsBlock
-        items={[
-          {
-            user: {
-              name: "Jack Russel",
-              avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
-            },
-            text: "Test comment number 1",
-          },
-          {
-            user: {
-              name: "Doberman Pincher",
-              avatarUrl: "https://mui.com/static/images/avatar/2.jpg",
-            },
-            text: "When displaying three lines or more, the avatar is not aligned at the top. You should set the prop to align the avatar at the top",
-          },
-        ]}
+        data={data}
+        comments={comments}
+        setComments={setComments}
         isLoading={false}
+        authorId={data.user._id}
       >
-        <AddComment />
+        <AddComment
+          id={data._id}
+          data={data}
+          comments={comments}
+          setComments={setComments}
+        />
       </CommentsBlock>
     </>
   );

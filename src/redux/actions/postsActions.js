@@ -18,3 +18,27 @@ export const fetchRemovePost = createAsyncThunk(
     await axios.delete(`${_POSTS_ROUTE}/${id}`);
   }
 );
+
+export const fetchSortByNewest = createAsyncThunk(
+  "posts/fetchSortByNewest",
+  async () => {
+    const { data } = await axios.get(_POSTS_ROUTE);
+    return data;
+  }
+);
+
+export const fetchSortByPopularity = createAsyncThunk(
+  "posts/fetchSortByPopularity",
+  async () => {
+    const { data } = await axios.get(_POSTS_ROUTE);
+    return data;
+  }
+);
+
+export const fetchComments = createAsyncThunk(
+  "posts/fetchComments",
+  async () => {
+    const { data } = await axios.get("/comments");
+    return data;
+  }
+);

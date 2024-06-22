@@ -85,7 +85,7 @@ export const Registration = React.memo(() => {
       </Typography>
       <div className={styles.avatar}>
         <Avatar
-          src={preview ? `${_BASE_URL}${preview}` : null}
+          src={preview ? `${_BASE_URL}${preview}` : "../../images/no_avatar.png"}
           sx={{ width: 100, height: 100 }}
         />
         <input

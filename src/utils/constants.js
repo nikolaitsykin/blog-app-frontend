@@ -6,7 +6,7 @@ export const _POSTS_ROUTE = "/posts";
 export const _POST_ROUTE = "/posts/:id";
 export const _ADD_POST_ROUTE = "/posts/add";
 export const _TAGS_ROUTE = "/tags";
-export const _COMMENTS_ROUTE = "/comments/:id";
+export const _COMMENTS_ROUTE = "/comments";
 export const _EDIT_POST_ROUTE = "/posts/:id/edit";
 export const _USER_ROUTE = "/users/:id";
 

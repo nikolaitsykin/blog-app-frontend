@@ -6,33 +6,54 @@ import { useDispatch, useSelector } from "react-redux";
 import { CommentsBlock } from "../components/CommentsBlock";
 import { Post } from "../components/Post";
 import { TagsBlock } from "../components/TagsBlock";
-import { fetchPosts, fetchTags } from "../redux/actions/postsActions";
+import {
+  fetchComments,
+  fetchPosts,
+  fetchTags,
+  fetchSortByNewest,
+  fetchSortByPopularity,
+} from "../redux/actions/postsActions";
 import { _BASE_URL } from "../utils/constants";
 
 export const Home = () => {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.auth.data);
-  const { posts, tags } = useSelector((state) => state.posts);
-
-  const uniqueTags = [...new Set(tags.items)];
+  const { posts, tags, comments } = useSelector((state) => state.posts);
+  const [activeTab, setActiveTab] = React.useState(0);
 
   const isPostsLoading = posts.status === "loading";
   const isTagsLoading = tags.status === "loading";
+  const isCommentsLoading = comments.status === "loading";
+
+  const handleChange = () => {
+    activeTab === 0 ? setActiveTab(1) : setActiveTab(0);
+  };
+
+  const onSortByNewest = () => {
+    dispatch(fetchSortByNewest());
+  };
+
+  const onSortByPopularity = () => {
+    dispatch(fetchSortByPopularity());
+  };
 
   useEffect(() => {
     dispatch(fetchPosts());
     dispatch(fetchTags());
+    dispatch(fetchComments());
+    dispatch(fetchSortByNewest());
   }, []);
 
   return (
     <>
       <Tabs
+        onChange={handleChange}
         style={{ marginBottom: 15 }}
-        value={0}
+        value={activeTab}
         aria-label="basic tabs example"
       >
-        <Tab label="New" />
-        <Tab label="Popular" />
+        <Tab onClick={onSortByNewest} label="New" />
+        <Tab onClick={onSortByPopularity} label="Popular" />
       </Tabs>
       <Grid container spacing={1}>
         <Grid xs={8} item>
@@ -48,7 +69,7 @@ export const Home = () => {
                 user={obj.user}
                 createdAt={obj.createdAt}
                 viewsCount={obj.viewsCount}
-                commentsCount={3}
+                commentsCount={obj.comments.length}
                 tags={obj.tags}
                 isEditable={userData?._id === obj.user._id}
               />
@@ -56,25 +77,10 @@ export const Home = () => {
           )}
         </Grid>
         <Grid xs={4} item>
-          <TagsBlock items={uniqueTags} isLoading={isTagsLoading} />
+          <TagsBlock items={tags.items} isLoading={isTagsLoading} />
           <CommentsBlock
-            items={[
-              {
-                user: {
-                  name: "Jack Russel",
-                  avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
-                },
-                text: "This is test comment",
-              },
-              {
-                user: {
-                  name: "Dobeman Pincher",
-                  avatarUrl: "https://mui.com/static/images/avatar/2.jpg",
-                },
-                text: "When displaying three lines or more, the avatar is not aligned at the top. You should set the prop to align the avatar at the top",
-              },
-            ]}
-            isLoading={false}
+            comments={comments.items}
+            isLoading={isCommentsLoading}
           />
         </Grid>
       </Grid>
