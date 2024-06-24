@@ -8,6 +8,7 @@ $gray: #cac8c8;
   overflow: hidden;
   margin-bottom: 15px;
   position: relative;
+  text-decoration: none;
 
   &:hover {
     box-shadow: 0 1px $gray;
@@ -53,11 +54,13 @@ $gray: #cac8c8;
 
 .indention {
   padding-left: 40px;
+  cursor: pointer;
 }
 
 .title {
   font-size: 28px;
   margin: 0;
+  text-decoration: none;
 
   a {
     text-decoration: none;

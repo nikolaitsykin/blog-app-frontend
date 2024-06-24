@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   fetchComments,
+  fetchFilterByTags,
   fetchPosts,
   fetchSortByNewest,
   fetchSortByPopularity,
+  fetchSortByTags,
   fetchTags,
 } from "../actions/postsActions";
 
@@ -66,11 +68,25 @@ const postSlice = createSlice({
         state.tags.status = "loading";
       })
       .addCase(fetchTags.fulfilled, (state, { payload }) => {
-        state.tags.items = payload;
+        const uniqueTags = [...new Set(payload)];
+        state.tags.items = uniqueTags;
         state.tags.status = "loaded";
       })
       .addCase(fetchTags.rejected, (state) => {
         state.tags.status = "error";
+      })
+      .addCase(fetchFilterByTags.pending, (state) => {
+        state.posts.status = "loading";
+      })
+      .addCase(fetchFilterByTags.fulfilled, (state, { payload }) => {
+        state.posts.items = state.posts.items.filter((post) => {
+          return post.tags.some((tag) => payload.includes(tag));
+        });
+      
+        state.posts.status = "loaded";
+      })
+      .addCase(fetchFilterByTags.rejected, (state) => {
+        state.posts.status = "error";
       })
       .addCase(fetchComments.pending, (state) => {
         state.comments.status = "loading";

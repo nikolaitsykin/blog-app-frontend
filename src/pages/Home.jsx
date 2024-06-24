@@ -3,15 +3,16 @@ import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import { CommentsBlock } from "../components/CommentsBlock";
 import { Post } from "../components/Post";
 import { TagsBlock } from "../components/TagsBlock";
 import {
   fetchComments,
   fetchPosts,
-  fetchTags,
   fetchSortByNewest,
   fetchSortByPopularity,
+  fetchTags,
 } from "../redux/actions/postsActions";
 import { _BASE_URL } from "../utils/constants";
 
@@ -20,6 +21,12 @@ export const Home = () => {
   const userData = useSelector((state) => state.auth.data);
   const { posts, tags, comments } = useSelector((state) => state.posts);
   const [activeTab, setActiveTab] = React.useState(0);
+
+  const id = useParams();
+  const postFilterByTags = posts.items.filter((obj) =>
+    obj.tags.includes(id.id)
+  );
+  const postsByTags = id.id ? postFilterByTags : posts.items ;
 
   const isPostsLoading = posts.status === "loading";
   const isTagsLoading = tags.status === "loading";
@@ -42,7 +49,7 @@ export const Home = () => {
     dispatch(fetchTags());
     dispatch(fetchComments());
     dispatch(fetchSortByNewest());
-  }, []);
+  }, [id]);
 
   return (
     <>
@@ -57,7 +64,7 @@ export const Home = () => {
       </Tabs>
       <Grid container spacing={1}>
         <Grid xs={8} item>
-          {(isPostsLoading ? [...Array(5)] : posts.items).map((obj, index) =>
+          {(isPostsLoading ? [...Array(5)] : postsByTags).map((obj, index) =>
             isPostsLoading ? (
               <Post key={index} isLoading={true} />
             ) : (

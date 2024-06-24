@@ -4,7 +4,7 @@ import TextField from "@mui/material/TextField";
 import "easymde/dist/easymde.min.css";
 import React from "react";
 import { useSelector } from "react-redux";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import SimpleMDE from "react-simplemde-editor";
 import { selectIsAuth } from "../../redux/slices/authSlice";
 import axios from "../../utils/axios";
@@ -28,6 +28,10 @@ export const AddPost = () => {
     tags: "",
     imageUrl: "",
   });
+
+  const { id } = useParams();
+
+  console.log(id);
 
   const onChange = React.useCallback((field, value) => {
     setFields((prevForm) => ({
@@ -71,12 +75,20 @@ export const AddPost = () => {
   );
 
   const onSubmit = async () => {
+    console.log(id);
     try {
-      setIsLoading(true);
-      const fieldsCopy = { ...fields, tags: fields.tags.split(",") };
-      const { data } = await axios.post(`${_POSTS_ROUTE}`, fieldsCopy);
-      const id = data._id;
-      navigate(`${_POSTS_ROUTE}/${id}`);
+      if (id) {
+        setIsLoading(true);
+        const fieldsCopy = { ...fields };
+        await axios.patch(`${_POSTS_ROUTE}/${id}/edit`, fieldsCopy);
+        navigate(`${_POSTS_ROUTE}/${id}`);
+      } else {
+        setIsLoading(true);
+        const fieldsCopy = { ...fields, tags: fields.tags.trim().split(" ") };
+        const { data } = await axios.post(`${_POSTS_ROUTE}`, fieldsCopy);
+        const id = data._id;
+        navigate(`${_POSTS_ROUTE}/${id}`);
+      }
     } catch (error) {
       console.warn(error);
       alert("Error create post");

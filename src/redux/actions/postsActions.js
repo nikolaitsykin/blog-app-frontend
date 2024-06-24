@@ -1,6 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../utils/axios";
-import { _POSTS_ROUTE, _TAGS_ROUTE } from "../../utils/constants";
+import {
+  _COMMENTS_ROUTE,
+  _POSTS_ROUTE,
+  _TAGS_ROUTE,
+} from "../../utils/constants";
 
 export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
   const { data } = await axios.get(_POSTS_ROUTE);
@@ -38,7 +42,14 @@ export const fetchSortByPopularity = createAsyncThunk(
 export const fetchComments = createAsyncThunk(
   "posts/fetchComments",
   async () => {
-    const { data } = await axios.get("/comments");
+    const { data } = await axios.get(_COMMENTS_ROUTE);
     return data;
   }
 );
+export const fetchFilterByTags = createAsyncThunk(
+  "posts/fetchFilterByTags",
+  async () => {
+    const { data } = await axios.get(_POSTS_ROUTE);
+    return data;
+  }
+)

@@ -7,17 +7,17 @@ import axios from "../utils/axios";
 import { _BASE_URL, _POSTS_ROUTE } from "../utils/constants";
 
 export const FullPost = () => {
-  const [data, setData] = useState();
+  const [post, setPost] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [comments, setComments] = React.useState("");
   const { id } = useParams();
-  const isImage = data?.imageUrl ? `${_BASE_URL}${data.imageUrl}` : null;
+  const isImage = post?.imageUrl ? `${_BASE_URL}${post.imageUrl}` : null;
 
   useEffect(() => {
     axios
       .get(`${_POSTS_ROUTE}/${id}`)
       .then((res) => {
-        setData(res.data);
+        setPost(res.data);
         setComments(res.data.comments);
         setIsLoading(false);
       })
@@ -33,30 +33,30 @@ export const FullPost = () => {
   return (
     <>
       <Post
-        key={data._id}
-        id={data._id}
-        title={data.title}
+        key={post._id}
+        id={post._id}
+        title={post.title}
         imageUrl={isImage}
-        user={data.user}
-        createdAt={data.createdAt}
-        viewsCount={data.viewsCount}
-        commentsCount={data.comments.length}
-        tags={data.tags}
+        user={post.user}
+        createdAt={post.createdAt}
+        viewsCount={post.viewsCount}
+        commentsCount={post.comments.length}
+        tags={post.tags}
         isEditable
         isFullPost
       >
-        <p>{data.text}</p>
+        <p>{post.text}</p>
       </Post>
       <CommentsBlock
-        data={data}
+        data={post}
         comments={comments}
         setComments={setComments}
         isLoading={false}
-        authorId={data.user._id}
+        authorId={post.user._id}
       >
         <AddComment
-          id={data._id}
-          data={data}
+          id={post._id}
+          data={post}
           comments={comments}
           setComments={setComments}
         />
