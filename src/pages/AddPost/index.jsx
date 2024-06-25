@@ -2,10 +2,11 @@ import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import "easymde/dist/easymde.min.css";
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import SimpleMDE from "react-simplemde-editor";
+import { fetchPosts } from "../../redux/actions/postsActions";
 import { selectIsAuth } from "../../redux/slices/authSlice";
 import axios from "../../utils/axios";
 import {
@@ -17,9 +18,11 @@ import {
 import styles from "./AddPost.module.scss";
 
 export const AddPost = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const isAuth = useSelector(selectIsAuth);
   const token = window.localStorage.getItem("token");
+  const { posts } = useSelector((state) => state.posts);
   const [isLoading, setIsLoading] = React.useState(false);
   const inputFileRef = React.useRef(null);
   const [fields, setFields] = React.useState({
@@ -30,15 +33,27 @@ export const AddPost = () => {
   });
 
   const { id } = useParams();
+  const postIsEditing = id ? posts.items.find((obj) => obj._id === id) : null;
 
-  console.log(id);
-
-  const onChange = React.useCallback((field, value) => {
-    setFields((prevForm) => ({
-      ...prevForm,
-      [field]: value,
-    }));
-  }, []);
+  const onChange = React.useCallback(
+    (field, value) => {
+      if (postIsEditing) {
+        setFields((prevFields) => ({
+          ...prevFields,
+          [field]:
+            value !== (postIsEditing[field] || prevFields[field])
+              ? value
+              : prevFields[field],
+        }));
+      } else {
+        setFields((prevForm) => ({
+          ...prevForm,
+          [field]: value,
+        }));
+      }
+    },
+    [postIsEditing]
+  );
 
   const handleChangeFile = async (e) => {
     try {
@@ -75,12 +90,10 @@ export const AddPost = () => {
   );
 
   const onSubmit = async () => {
-    console.log(id);
     try {
       if (id) {
         setIsLoading(true);
-        const fieldsCopy = { ...fields };
-        await axios.patch(`${_POSTS_ROUTE}/${id}/edit`, fieldsCopy);
+        await axios.patch(`${_POSTS_ROUTE}/${id}/edit`, { ...fields });
         navigate(`${_POSTS_ROUTE}/${id}`);
       } else {
         setIsLoading(true);
@@ -94,6 +107,10 @@ export const AddPost = () => {
       alert("Error create post");
     }
   };
+
+  useEffect(() => {
+    dispatch(fetchPosts());
+  }, [id]);
 
   if (!isAuth && !token) {
     return <Navigate to={_HOME_ROUTE} />;

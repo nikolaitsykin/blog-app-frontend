@@ -3,6 +3,7 @@ import {
   fetchComments,
   fetchFilterByTags,
   fetchPosts,
+  fetchRemovePost,
   fetchSortByNewest,
   fetchSortByPopularity,
   fetchSortByTags,
@@ -39,6 +40,11 @@ const postSlice = createSlice({
       })
       .addCase(fetchPosts.rejected, (state) => {
         state.posts.status = "error";
+      })
+      .addCase(fetchRemovePost.pending, (state, action) => {
+        state.posts.items = state.posts.items.filter(
+          (obj) => obj._id !== action.meta.arg
+        );
       })
       .addCase(fetchSortByNewest.pending, (state) => {
         state.posts.status = "loading";
@@ -82,7 +88,7 @@ const postSlice = createSlice({
         state.posts.items = state.posts.items.filter((post) => {
           return post.tags.some((tag) => payload.includes(tag));
         });
-      
+
         state.posts.status = "loaded";
       })
       .addCase(fetchFilterByTags.rejected, (state) => {

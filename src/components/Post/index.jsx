@@ -1,17 +1,15 @@
-import React from "react";
-import clsx from "clsx";
-import IconButton from "@mui/material/IconButton";
+import CommentIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import DeleteIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
 import EyeIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import CommentIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
-import styles from "./Post.module.scss";
-import { UserInfo } from "../UserInfo";
-import { PostSkeleton } from "./Skeleton";
+import IconButton from "@mui/material/IconButton";
+import clsx from "clsx";
+import React from "react";
 import { Link } from "react-router-dom";
 import { _POSTS_ROUTE, _TAGS_ROUTE } from "../../utils/constants";
-import { useDispatch } from "react-redux";
-import { fetchRemovePost } from "../../redux/actions/postsActions";
+import { UserInfo } from "../UserInfo";
+import styles from "./Post.module.scss";
+import { PostSkeleton } from "./Skeleton";
 
 export const Post = ({
   id,
@@ -26,17 +24,14 @@ export const Post = ({
   isFullPost,
   isLoading,
   isEditable,
+  onRemovePost,
 }) => {
-  const dispatch = useDispatch();
   if (isLoading) {
     return <PostSkeleton />;
   }
 
-
   const onClickRemove = () => {
-    if (window.confirm("Do you really want to delete an article?")) {
-      dispatch(fetchRemovePost(id));
-    }
+    onRemovePost(id);
   };
 
   return (

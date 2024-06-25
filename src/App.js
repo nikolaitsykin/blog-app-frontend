@@ -1,7 +1,7 @@
 import Container from "@mui/material/Container";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { Header } from "./components";
 import { AddPost, FullPost, Home, Login, Registration } from "./pages";
 import { fetchAuthMe } from "./redux/actions/authActions";
@@ -36,6 +36,7 @@ function App() {
           <Route path={_LOGIN_ROUTE} element={<Login />} />
           <Route path={_REGISTER_ROUTE} element={<Registration />} />
           <Route path={_TAGS_ID_ROUTE} element={<Home />} />
+          <Route path="*" element={<Navigate to={_HOME_ROUTE} />} />
         </Routes>
       </Container>
     </>

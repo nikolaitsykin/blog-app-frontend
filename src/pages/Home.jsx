@@ -10,6 +10,7 @@ import { TagsBlock } from "../components/TagsBlock";
 import {
   fetchComments,
   fetchPosts,
+  fetchRemovePost,
   fetchSortByNewest,
   fetchSortByPopularity,
   fetchTags,
@@ -18,22 +19,19 @@ import { _BASE_URL } from "../utils/constants";
 
 export const Home = () => {
   const dispatch = useDispatch();
-  const userData = useSelector((state) => state.auth.data);
+  const user = useSelector((state) => state.auth.data);
   const { posts, tags, comments } = useSelector((state) => state.posts);
   const [activeTab, setActiveTab] = React.useState(0);
 
-  const id = useParams();
-  const postFilterByTags = posts.items.filter((obj) =>
-    obj.tags.includes(id.id)
-  );
-  const postsByTags = id.id ? postFilterByTags : posts.items ;
+  const tag = useParams();
+  const postsByTag = tag.id ? posts.items.filter((obj) => obj.tags.includes(tag.id)) : posts.items;
 
-  const isPostsLoading = posts.status === "loading";
-  const isTagsLoading = tags.status === "loading";
-  const isCommentsLoading = comments.status === "loading";
+  const isLoadingPosts = posts.status === "loading";
+  const isLoadingTags = tags.status === "loading";
+  const isLoadingComments = comments.status === "loading";
 
-  const handleChange = () => {
-    activeTab === 0 ? setActiveTab(1) : setActiveTab(0);
+  const handleTabChange = (_, newValue) => {
+    setActiveTab(newValue);
   };
 
   const onSortByNewest = () => {
@@ -44,18 +42,23 @@ export const Home = () => {
     dispatch(fetchSortByPopularity());
   };
 
+  const onRemovePost = (postId) => {
+    if (window.confirm("Do you really want to delete this post?")) {
+      dispatch(fetchRemovePost(postId));
+    }
+  };
+
   useEffect(() => {
     dispatch(fetchPosts());
     dispatch(fetchTags());
     dispatch(fetchComments());
     dispatch(fetchSortByNewest());
-  }, [id]);
+  }, [dispatch]);
 
   return (
     <>
       <Tabs
-        onChange={handleChange}
-        style={{ marginBottom: 15 }}
+        onChange={handleTabChange}
         value={activeTab}
         aria-label="basic tabs example"
       >
@@ -64,31 +67,29 @@ export const Home = () => {
       </Tabs>
       <Grid container spacing={1}>
         <Grid xs={8} item>
-          {(isPostsLoading ? [...Array(5)] : postsByTags).map((obj, index) =>
-            isPostsLoading ? (
+          {postsByTag.map((post, index) =>
+            isLoadingPosts ? (
               <Post key={index} isLoading={true} />
             ) : (
               <Post
                 key={index}
-                id={obj._id}
-                title={obj.title}
-                imageUrl={obj.imageUrl ? `${_BASE_URL}${obj.imageUrl}` : null}
-                user={obj.user}
-                createdAt={obj.createdAt}
-                viewsCount={obj.viewsCount}
-                commentsCount={obj.comments.length}
-                tags={obj.tags}
-                isEditable={userData?._id === obj.user._id}
+                id={post._id}
+                title={post.title}
+                imageUrl={post.imageUrl ? `${_BASE_URL}${post.imageUrl}` : null}
+                user={post.user}
+                createdAt={post.createdAt}
+                viewsCount={post.viewsCount}
+                commentsCount={post.comments.length}
+                tags={post.tags}
+                isEditable={user?._id === post.user._id}
+                onRemovePost={onRemovePost}
               />
             )
           )}
         </Grid>
         <Grid xs={4} item>
-          <TagsBlock items={tags.items} isLoading={isTagsLoading} />
-          <CommentsBlock
-            comments={comments.items}
-            isLoading={isCommentsLoading}
-          />
+          <TagsBlock items={tags.items} isLoading={isLoadingTags} />
+          <CommentsBlock comments={comments.items} isLoading={isLoadingComments} />
         </Grid>
       </Grid>
     </>
