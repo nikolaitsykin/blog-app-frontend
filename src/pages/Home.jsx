@@ -22,6 +22,7 @@ export const Home = () => {
   const user = useSelector((state) => state.auth.data);
   const { posts, tags, comments } = useSelector((state) => state.posts);
   const [activeTab, setActiveTab] = React.useState(0);
+  const [tagList, setTagList] = React.useState([]);
 
   const tag = useParams();
   const postsByTag = tag.id
@@ -59,6 +60,12 @@ export const Home = () => {
     dispatch(fetchSortByNewest());
   }, [dispatch]);
 
+  useEffect(() => {
+    const allTags = posts.items.flatMap((post) => post.tags);
+    const uniqueTags = [...new Set(allTags)];
+    setTagList(uniqueTags);
+  }, [posts.items]);
+
   return (
     <>
       <Tabs
@@ -92,7 +99,7 @@ export const Home = () => {
           )}
         </Grid>
         <Grid xs={4} item>
-          <TagsBlock items={tags.items} isLoading={isLoadingTags} />
+          <TagsBlock items={tagList} isLoading={isLoadingTags} />
           <CommentsBlock
             comments={commentsInPostsByTag}
             isLoading={isLoadingComments}

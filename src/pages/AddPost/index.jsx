@@ -34,9 +34,8 @@ export const AddPost = React.memo(() => {
     imageUrl: "",
   });
 
-  const { id } = useParams();
-  console.log(id);
-  const postIsEditing = id ? posts.items.find((obj) => obj._id === id) : null;
+  const post  = useParams();
+  const postIsEditing = post.id ? posts.items.find((obj) => obj._id === post.id) : null;
 
   React.useEffect(() => {
     if (postIsEditing) {
@@ -91,14 +90,14 @@ export const AddPost = React.memo(() => {
 
   const onSubmit = React.useCallback(async () => {
     try {
-      if (id) {
+      if (post.id) {
         setIsLoading(true);
         const fieldsCopy = {
           ...fields,
           tags: fields.tags.trim().split(" "),
         };
-        await axios.patch(`${_POSTS_ROUTE}/${id}${_EDIT_ROUTE}`, fieldsCopy);
-        navigate(`${_POSTS_ROUTE}/${id}`);
+        await axios.patch(`${_POSTS_ROUTE}/${post.id}${_EDIT_ROUTE}`, fieldsCopy);
+        navigate(`${_POSTS_ROUTE}/${post.id}`);
       } else {
         setIsLoading(true);
         const fieldsCopy = { ...fields, tags: fields.tags.trim().split(" ") };
