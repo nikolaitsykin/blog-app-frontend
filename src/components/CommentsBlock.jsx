@@ -35,7 +35,7 @@ export const CommentsBlock = ({
         comments: commentsNew,
       };
 
-      await axios.post(`${_COMMENTS_ROUTE}${data._id}`, fields);
+      await axios.post(`${_COMMENTS_ROUTE}/${data._id}`, fields);
     } catch (err) {
       console.warn(err);
       alert("Error when deleting a comment!");
@@ -52,7 +52,7 @@ export const CommentsBlock = ({
                 {isLoading ? (
                   <Skeleton variant="circular" width={40} height={40} />
                 ) : (
-                  <Avatar alt={obj.user.name}  src={obj.user.avatarUrl} />
+                  <Avatar alt={obj.user.name} src={obj.user.avatarUrl} />
                 )}
               </ListItemAvatar>
               {isLoading ? (
@@ -69,10 +69,10 @@ export const CommentsBlock = ({
               )}
               {userDataId === authorId && userDataId !== undefined ? (
                 <ListItemIcon
-                    style={{ cursor: "pointer"}}
+                  style={{ cursor: "pointer" }}
                   onClick={() => removeComment(obj.text)}
                 >
-                  <DeleteForeverIcon/>
+                  <DeleteForeverIcon />
                 </ListItemIcon>
               ) : (
                 ""
