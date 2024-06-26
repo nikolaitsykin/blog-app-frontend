@@ -45,7 +45,7 @@ export const CommentsBlock = ({
   return (
     <SideBlock title="Comments">
       <List>
-        {(isLoading ? [...Array(5)] : comments)?.map((obj, index) => (
+        {(isLoading ? [...Array(3)] : comments)?.map((obj, index) => (
           <React.Fragment key={index}>
             <ListItem alignItems="flex-start">
               <ListItemAvatar>

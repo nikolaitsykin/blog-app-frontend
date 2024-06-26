@@ -9,6 +9,7 @@ export const _TAGS_ROUTE = "/tags";
 export const _TAGS_ID_ROUTE = "/tags/:id";
 export const _COMMENTS_ROUTE = "/comments";
 export const _EDIT_POST_ROUTE = "/posts/:id/edit";
+export const _EDIT_ROUTE = "/edit";
 export const _USER_ROUTE = "/users/:id";
 
 export const _BASE_URL = "http://localhost:4000";

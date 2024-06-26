@@ -24,7 +24,11 @@ export const Home = () => {
   const [activeTab, setActiveTab] = React.useState(0);
 
   const tag = useParams();
-  const postsByTag = tag.id ? posts.items.filter((obj) => obj.tags.includes(tag.id)) : posts.items;
+  const postsByTag = tag.id
+    ? posts.items.filter((obj) => obj.tags.includes(tag.id))
+    : posts.items;
+
+  const commentsInPostsByTag = postsByTag.map((obj) => obj.comments).flat();
 
   const isLoadingPosts = posts.status === "loading";
   const isLoadingTags = tags.status === "loading";
@@ -89,7 +93,10 @@ export const Home = () => {
         </Grid>
         <Grid xs={4} item>
           <TagsBlock items={tags.items} isLoading={isLoadingTags} />
-          <CommentsBlock comments={comments.items} isLoading={isLoadingComments} />
+          <CommentsBlock
+            comments={commentsInPostsByTag}
+            isLoading={isLoadingComments}
+          />
         </Grid>
       </Grid>
     </>

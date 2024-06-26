@@ -2,7 +2,7 @@ import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import "easymde/dist/easymde.min.css";
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import SimpleMDE from "react-simplemde-editor";
@@ -11,17 +11,19 @@ import { selectIsAuth } from "../../redux/slices/authSlice";
 import axios from "../../utils/axios";
 import {
   _BASE_URL,
+  _EDIT_ROUTE,
   _HOME_ROUTE,
   _POSTS_ROUTE,
   _UPLOAD_URL,
 } from "../../utils/constants";
 import styles from "./AddPost.module.scss";
 
-export const AddPost = () => {
+export const AddPost = React.memo(() => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isAuth = useSelector(selectIsAuth);
   const token = window.localStorage.getItem("token");
+
   const { posts } = useSelector((state) => state.posts);
   const [isLoading, setIsLoading] = React.useState(false);
   const inputFileRef = React.useRef(null);
@@ -33,32 +35,30 @@ export const AddPost = () => {
   });
 
   const { id } = useParams();
+  console.log(id);
   const postIsEditing = id ? posts.items.find((obj) => obj._id === id) : null;
 
-  const onChange = React.useCallback(
-    (field, value) => {
-      if (postIsEditing) {
-        setFields((prevFields) => ({
-          ...prevFields,
-          [field]:
-            value !== (postIsEditing[field] || prevFields[field])
-              ? value
-              : prevFields[field],
-        }));
-      } else {
-        setFields((prevForm) => ({
-          ...prevForm,
-          [field]: value,
-        }));
-      }
-    },
-    [postIsEditing]
-  );
+  React.useEffect(() => {
+    if (postIsEditing) {
+      setFields({
+        title: postIsEditing.title,
+        text: postIsEditing.text,
+        tags: postIsEditing.tags.join(", "),
+        imageUrl: postIsEditing.imageUrl,
+      });
+    }
+  }, [postIsEditing]);
 
-  const handleChangeFile = async (e) => {
+  const onChange = React.useCallback((field, value) => {
+    setFields((prevForm) => ({
+      ...prevForm,
+      [field]: value,
+    }));
+  }, []);
+
+  const handleChangeFile = React.useCallback(async (e) => {
     try {
       const file = e.target.files[0];
-      console.log(file);
       const formData = new FormData();
       formData.append("image", file);
 
@@ -68,11 +68,11 @@ export const AddPost = () => {
       console.warn(error);
       alert("Error upload file");
     }
-  };
+  }, []);
 
-  const onClickRemoveImage = () => {
+  const onClickRemoveImage = React.useCallback(() => {
     setFields((prev) => ({ ...prev, imageUrl: "" }));
-  };
+  }, []);
 
   const options = React.useMemo(
     () => ({
@@ -89,28 +89,32 @@ export const AddPost = () => {
     []
   );
 
-  const onSubmit = async () => {
+  const onSubmit = React.useCallback(async () => {
     try {
       if (id) {
         setIsLoading(true);
-        await axios.patch(`${_POSTS_ROUTE}/${id}/edit`, { ...fields });
+        const fieldsCopy = {
+          ...fields,
+          tags: fields.tags.trim().split(" "),
+        };
+        await axios.patch(`${_POSTS_ROUTE}/${id}${_EDIT_ROUTE}`, fieldsCopy);
         navigate(`${_POSTS_ROUTE}/${id}`);
       } else {
         setIsLoading(true);
         const fieldsCopy = { ...fields, tags: fields.tags.trim().split(" ") };
         const { data } = await axios.post(`${_POSTS_ROUTE}`, fieldsCopy);
-        const id = data._id;
-        navigate(`${_POSTS_ROUTE}/${id}`);
+        const postId = data._id;
+        navigate(`${_POSTS_ROUTE}/${postId}`);
       }
     } catch (error) {
       console.warn(error);
       alert("Error create post");
     }
-  };
+  }, [fields, navigate]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     dispatch(fetchPosts());
-  }, [id]);
+  }, [dispatch]);
 
   if (!isAuth && !token) {
     return <Navigate to={_HOME_ROUTE} />;
@@ -191,4 +195,4 @@ export const AddPost = () => {
       </div>
     </Paper>
   );
-};
+});

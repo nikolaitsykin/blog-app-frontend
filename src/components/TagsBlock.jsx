@@ -17,10 +17,10 @@ export const TagsBlock = ({ items, isLoading = true }) => {
   return (
     <SideBlock title="Tags">
       <List>
-        {(isLoading ? [...Array(100)] : uniqueTags).map((name, index) => (
+        {(isLoading ? [...Array(3)] : uniqueTags).map((tag, index) => (
           <Link
             style={{ textDecoration: "none", color: "black" }}
-            to={`${_TAGS_ROUTE}/${name}`}
+            to={`${_TAGS_ROUTE}/${tag}`}
             key={index}
           >
             <ListItem key={index} disablePadding>
@@ -31,7 +31,7 @@ export const TagsBlock = ({ items, isLoading = true }) => {
                 {isLoading ? (
                   <Skeleton width={100} />
                 ) : (
-                  <ListItemText primary={name} />
+                  <ListItemText primary={tag} />
                 )}
               </ListItemButton>
             </ListItem>
