@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
 import { AddComment } from "../components/AddComment";
 import { CommentsBlock } from "../components/CommentsBlock";
@@ -6,27 +6,26 @@ import { Post } from "../components/Post";
 import axios from "../utils/axios";
 import { _BASE_URL, _POSTS_ROUTE } from "../utils/constants";
 
-export const FullPost = React.memo(({ id }) => {
+export const FullPost = () => {
   const [post, setPost] = React.useState();
   const [comments, setComments] = React.useState();
   const [isLoading, setIsLoading] = React.useState(true);
   const isImage = post?.imageUrl ? `${_BASE_URL}${post.imageUrl}` : null;
+  const { id } = useParams();
 
   React.useEffect(() => {
-    const fetchPost = async () => {
-      try {
-        const { data } = await axios.get(`${_POSTS_ROUTE}/${id}`);
-        setPost(data);
-        setComments(data.comments);
+    axios
+      .get(`${_POSTS_ROUTE}/${id}`)
+      .then((res) => {
+        setPost(res.data);
+        setComments(res.data.comments);
         setIsLoading(false);
-      } catch (error) {
-        console.warn(error);
+      })
+      .catch((err) => {
+        console.warn(err);
         alert("Error getting article");
-      }
-    };
-
-    fetchPost();
-  }, [id]);
+      });
+  }, []);
 
   if (isLoading) {
     return <Post isLoading={isLoading} isFullPost />;
@@ -65,4 +64,4 @@ export const FullPost = React.memo(({ id }) => {
       </CommentsBlock>
     </>
   );
-});
+};

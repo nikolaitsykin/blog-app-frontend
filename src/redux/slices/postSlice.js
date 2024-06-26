@@ -6,7 +6,6 @@ import {
   fetchRemovePost,
   fetchSortByNewest,
   fetchSortByPopularity,
-  fetchSortByTags,
   fetchTags,
 } from "../actions/postsActions";
 

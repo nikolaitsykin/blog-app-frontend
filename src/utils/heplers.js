@@ -1,11 +1,8 @@
-import axios from "./axios";
-import { _POSTS_ROUTE } from "./constants";
+import axios from "../utils/axios";
+import { _POSTS_ROUTE } from "../utils/constants";
 
-export const getPosts = async (id) => {
-  try {
-    const { data } = await axios.get(`${_POSTS_ROUTE}/${id}`);
-    return data;
-  } catch (error) {
-    console.warn(error);
-  }
+export const getPost = (id) => {
+  const res = axios.get(_POSTS_ROUTE`/${id}`);
+  console.log(res);
+  return res;
 };

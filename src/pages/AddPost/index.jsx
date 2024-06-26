@@ -3,10 +3,9 @@ import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import "easymde/dist/easymde.min.css";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import SimpleMDE from "react-simplemde-editor";
-import { fetchPosts } from "../../redux/actions/postsActions";
 import { selectIsAuth } from "../../redux/slices/authSlice";
 import axios from "../../utils/axios";
 import {
@@ -18,13 +17,11 @@ import {
 } from "../../utils/constants";
 import styles from "./AddPost.module.scss";
 
-export const AddPost = React.memo(() => {
-  const dispatch = useDispatch();
+export const AddPost = () => {
   const navigate = useNavigate();
   const isAuth = useSelector(selectIsAuth);
   const token = window.localStorage.getItem("token");
 
-  const { posts } = useSelector((state) => state.posts);
   const [isLoading, setIsLoading] = React.useState(false);
   const inputFileRef = React.useRef(null);
   const [fields, setFields] = React.useState({
@@ -34,19 +31,27 @@ export const AddPost = React.memo(() => {
     imageUrl: "",
   });
 
-  const post  = useParams();
-  const postIsEditing = post.id ? posts.items.find((obj) => obj._id === post.id) : null;
+  const { id } = useParams();
+  const isEditing = Boolean(id);
 
   React.useEffect(() => {
-    if (postIsEditing) {
-      setFields({
-        title: postIsEditing.title,
-        text: postIsEditing.text,
-        tags: postIsEditing.tags.join(", "),
-        imageUrl: postIsEditing.imageUrl,
-      });
+    if (id) {
+      axios
+        .get(`${_POSTS_ROUTE}/${id}`)
+        .then(({ data }) => {
+          setFields({
+            title: data.title,
+            text: data.text,
+            tags: data.tags.join(", "),
+            imageUrl: data.imageUrl,
+          });
+        })
+        .catch((err) => {
+          console.warn(err);
+          alert("Error when getting post!");
+        });
     }
-  }, [postIsEditing]);
+  }, []);
 
   const onChange = React.useCallback((field, value) => {
     setFields((prevForm) => ({
@@ -88,32 +93,25 @@ export const AddPost = React.memo(() => {
     []
   );
 
-  const onSubmit = React.useCallback(async () => {
+  const onSubmit = async () => {
     try {
-      if (post.id) {
-        setIsLoading(true);
-        const fieldsCopy = {
-          ...fields,
-          tags: fields.tags.trim().split(" "),
-        };
-        await axios.patch(`${_POSTS_ROUTE}/${post.id}${_EDIT_ROUTE}`, fieldsCopy);
-        navigate(`${_POSTS_ROUTE}/${post.id}`);
-      } else {
-        setIsLoading(true);
-        const fieldsCopy = { ...fields, tags: fields.tags.trim().split(" ") };
-        const { data } = await axios.post(`${_POSTS_ROUTE}`, fieldsCopy);
-        const postId = data._id;
-        navigate(`${_POSTS_ROUTE}/${postId}`);
-      }
+      setIsLoading(true);
+      const fieldsCopy = {
+        ...fields,
+        tags: fields.tags.trim().split(", "),
+      };
+      const { data } = isEditing
+        ? await axios.patch(`${_POSTS_ROUTE}/${id}${_EDIT_ROUTE}`, fieldsCopy)
+        : await axios.post(`${_POSTS_ROUTE}`, fieldsCopy);
+
+      const postId = isEditing ? id : data._id;
+
+      navigate(`${_POSTS_ROUTE}/${postId}`);
     } catch (error) {
       console.warn(error);
-      alert("Error create post");
+      alert(isEditing ? "Error edit post" : "Error create post");
     }
-  }, [fields, navigate]);
-
-  React.useEffect(() => {
-    dispatch(fetchPosts());
-  }, [dispatch]);
+  };
 
   if (!isAuth && !token) {
     return <Navigate to={_HOME_ROUTE} />;
@@ -173,7 +171,7 @@ export const AddPost = React.memo(() => {
         fullWidth
       />
       <SimpleMDE
-        id="text"
+        id="simplemde"
         className={styles.editor}
         value={fields.text}
         onChange={(text) => setFields({ ...fields, text })}
@@ -186,7 +184,7 @@ export const AddPost = React.memo(() => {
           size="large"
           variant="contained"
         >
-          Post
+          {isEditing ? "Save" : "Publish"}
         </Button>
         <Link to="/">
           <Button size="large">Cancel</Button>
@@ -194,4 +192,4 @@ export const AddPost = React.memo(() => {
       </div>
     </Paper>
   );
-});
+};

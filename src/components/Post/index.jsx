@@ -5,8 +5,15 @@ import EyeIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import IconButton from "@mui/material/IconButton";
 import clsx from "clsx";
 import React from "react";
-import { Link } from "react-router-dom";
-import { _POSTS_ROUTE, _TAGS_ROUTE } from "../../utils/constants";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { fetchPosts, fetchRemovePost } from "../../redux/actions/postsActions";
+import {
+  _EDIT_ROUTE,
+  _HOME_ROUTE,
+  _POSTS_ROUTE,
+  _TAGS_ROUTE,
+} from "../../utils/constants";
 import { UserInfo } from "../UserInfo";
 import styles from "./Post.module.scss";
 import { PostSkeleton } from "./Skeleton";
@@ -24,21 +31,27 @@ export const Post = ({
   isFullPost,
   isLoading,
   isEditable,
-  onRemovePost,
 }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   if (isLoading) {
     return <PostSkeleton />;
   }
 
   const onClickRemove = () => {
-    onRemovePost(id);
+    if (window.confirm("Do you really want to delete this post?")) {
+      dispatch(fetchRemovePost(id));
+      dispatch(fetchPosts());
+      navigate({ pathname: _HOME_ROUTE });
+    }
   };
 
   return (
     <div className={clsx(styles.root, { [styles.rootFull]: isFullPost })}>
       {isEditable && (
         <div className={styles.editButtons}>
-          <Link to={`${_POSTS_ROUTE}/${id}/edit`}>
+          <Link to={`${_POSTS_ROUTE}/${id}${_EDIT_ROUTE}`}>
             <IconButton color="primary">
               <EditIcon />
             </IconButton>

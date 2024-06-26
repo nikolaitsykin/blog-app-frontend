@@ -23,8 +23,8 @@ export const CommentsBlock = ({
 }) => {
   const [value, setValue] = React.useState("");
   const userDataId = useSelector((state) => state.auth.data?._id);
-
-  const avatar = data ? data.user.avatarUrl : "../images/no_avatar.png";
+  const avatarUrl = useSelector((state) => state.auth.data?.avatarUrl);
+  const avatar = avatarUrl ? avatarUrl : "../../images/no_avatar.png";
 
   const removeComment = async (value) => {
     try {
@@ -64,7 +64,7 @@ export const CommentsBlock = ({
                 </div>
               ) : (
                 <ListItemText
-                  primary={obj.user.fullName}
+                  primary={obj.user.name}
                   secondary={obj.text}
                   value={obj.text}
                 />
