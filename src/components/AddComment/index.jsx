@@ -10,7 +10,7 @@ import styles from "./AddComment.module.scss";
 export const AddComment = ({ id, data, comments, setComments }) => {
   const userData = useSelector((state) => state.auth.data);
   const [commentAdd, setCommentAdd] = React.useState("");
-  const isAvatar = userData
+  const avatar = userData
     ? `${userData.avatarUrl}`
     : "../../images/no_avatar.png";
 
@@ -23,7 +23,7 @@ export const AddComment = ({ id, data, comments, setComments }) => {
       if (commentAdd) {
         const user = {
           name: userData.name,
-          avatarUrl: isAvatar,
+          avatarUrl: avatar,
         };
 
         const fields = {
@@ -50,7 +50,7 @@ export const AddComment = ({ id, data, comments, setComments }) => {
   return (
     <>
       <div className={styles.root}>
-        <Avatar classes={{ root: styles.avatar }} src={isAvatar} />
+        <Avatar classes={{ root: styles.avatar }} src={avatar} />
         <div className={styles.form}>
           <TextField
             value={commentAdd}

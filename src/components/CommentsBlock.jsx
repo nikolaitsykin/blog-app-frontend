@@ -24,6 +24,8 @@ export const CommentsBlock = ({
   const [value, setValue] = React.useState("");
   const userDataId = useSelector((state) => state.auth.data?._id);
 
+  const avatar = data ? data.user.avatarUrl : "../images/no_avatar.png";
+
   const removeComment = async (value) => {
     try {
       setValue(value);
@@ -52,7 +54,7 @@ export const CommentsBlock = ({
                 {isLoading ? (
                   <Skeleton variant="circular" width={40} height={40} />
                 ) : (
-                  <Avatar alt={obj.user.name} src={obj.user.avatarUrl} />
+                  <Avatar alt={obj.user.name} src={avatar} />
                 )}
               </ListItemAvatar>
               {isLoading ? (
