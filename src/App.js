@@ -1,11 +1,10 @@
 import Container from "@mui/material/Container";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { Header } from "./components";
 import { AddPost, FullPost, Home, Login, Registration } from "./pages";
 import { fetchAuthMe } from "./redux/actions/authActions";
-import { selectIsAuth } from "./redux/slices/authSlice";
 import {
   _ADD_POST_ROUTE,
   _EDIT_POST_ROUTE,

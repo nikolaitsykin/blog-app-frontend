@@ -12,7 +12,7 @@ import { _HOME_ROUTE } from "../../utils/constants";
 import styles from "./Login.module.scss";
 
 export const Login = () => {
-  const isAuth = useSelector(selectIsAuth);
+  const isUserAuthenticated = useSelector(selectIsAuth);
   const dispatch = useDispatch();
 
   const { error, errorPath } = useSelector((state) => state.auth);
@@ -43,7 +43,7 @@ export const Login = () => {
     }
   }, [error]);
 
-  if (isAuth) {
+  if (isUserAuthenticated) {
     return <Navigate to={_HOME_ROUTE} />;
   }
 

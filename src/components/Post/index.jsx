@@ -35,17 +35,17 @@ export const Post = ({
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  if (isLoading) {
-    return <PostSkeleton />;
-  }
-
-  const onClickRemove = () => {
+  const handleRemovePost = () => {
     if (window.confirm("Do you really want to delete this post?")) {
       dispatch(fetchRemovePost(id));
       dispatch(fetchPosts());
       navigate({ pathname: _HOME_ROUTE });
     }
   };
+
+  if (isLoading) {
+    return <PostSkeleton />;
+  }
 
   return (
     <div className={clsx(styles.root, { [styles.rootFull]: isFullPost })}>
@@ -56,7 +56,7 @@ export const Post = ({
               <EditIcon />
             </IconButton>
           </Link>
-          <IconButton onClick={onClickRemove} color="secondary">
+          <IconButton onClick={handleRemovePost} color="secondary">
             <DeleteIcon />
           </IconButton>
         </div>
@@ -81,9 +81,9 @@ export const Post = ({
             )}
           </h2>
           <ul className={styles.tags}>
-            {tags.map((name) => (
-              <li key={name}>
-                <Link to={`${_TAGS_ROUTE}/${name}`}>#{name}</Link>
+            {tags.map((tagName) => (
+              <li key={tagName}>
+                <Link to={`${_TAGS_ROUTE}/${tagName}`}>#{tagName}</Link>
               </li>
             ))}
           </ul>

@@ -14,18 +14,20 @@ export const FullPost = () => {
   const { id } = useParams();
 
   React.useEffect(() => {
-    axios
-      .get(`${_POSTS_ROUTE}/${id}`)
-      .then((res) => {
-        setPost(res.data);
-        setComments(res.data.comments);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.warn(err);
-        alert("Error getting article");
-      });
+    fetchPost();
   }, []);
+
+  const fetchPost = async () => {
+    try {
+      const { data } = await axios.get(`${_POSTS_ROUTE}/${id}`);
+      setPost(data);
+      setComments(data.comments);
+      setIsLoading(false);
+    } catch (error) {
+      console.warn(error);
+      alert("Error getting article");
+    }
+  };
 
   if (isLoading) {
     return <Post isLoading={isLoading} isFullPost />;

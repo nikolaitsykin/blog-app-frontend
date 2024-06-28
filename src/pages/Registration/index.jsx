@@ -1,3 +1,5 @@
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { IconButton, InputAdornment } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
@@ -12,12 +14,10 @@ import { selectIsAuth } from "../../redux/slices/authSlice";
 import axios from "../../utils/axios";
 import { _BASE_URL, _HOME_ROUTE, _UPLOAD_URL } from "../../utils/constants";
 import styles from "./Registration.module.scss";
-import { IconButton, InputAdornment } from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 export const Registration = React.memo(() => {
   const dispatch = useDispatch();
-  const isAuth = useSelector(selectIsAuth);
+  const isUserAuthenticated = useSelector(selectIsAuth);
   const { error, errorPath } = useSelector((state) => state.auth);
   const [preview, setPreview] = React.useState(null);
   const hiddenInputRef = React.useRef(null);
@@ -74,7 +74,7 @@ export const Registration = React.memo(() => {
 
   const uploadButtonLabel = preview ? "Change image" : "Upload image";
 
-  if (isAuth) {
+  if (isUserAuthenticated) {
     return <Navigate to={_HOME_ROUTE} />;
   }
 
@@ -85,7 +85,9 @@ export const Registration = React.memo(() => {
       </Typography>
       <div className={styles.avatar}>
         <Avatar
-          src={preview ? `${_BASE_URL}${preview}` : "../../images/no_avatar.png"}
+          src={
+            preview ? `${_BASE_URL}${preview}` : "../../images/no_avatar.png"
+          }
           sx={{ width: 100, height: 100 }}
         />
         <input

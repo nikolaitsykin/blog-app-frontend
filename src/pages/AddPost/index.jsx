@@ -19,7 +19,7 @@ import styles from "./AddPost.module.scss";
 
 export const AddPost = () => {
   const navigate = useNavigate();
-  const isAuth = useSelector(selectIsAuth);
+  const isUserAuthenticated = useSelector(selectIsAuth);
   const token = window.localStorage.getItem("token");
 
   const [isLoading, setIsLoading] = React.useState(false);
@@ -36,22 +36,24 @@ export const AddPost = () => {
 
   React.useEffect(() => {
     if (id) {
-      axios
-        .get(`${_POSTS_ROUTE}/${id}`)
-        .then(({ data }) => {
-          setFields({
-            title: data.title,
-            text: data.text,
-            tags: data.tags.join(", "),
-            imageUrl: data.imageUrl,
-          });
-        })
-        .catch((err) => {
-          console.warn(err);
-          alert("Error when getting post!");
-        });
+      fetchPost();
     }
   }, []);
+
+  const fetchPost = async () => {
+    try {
+      const { data } = await axios.get(`${_POSTS_ROUTE}/${id}`);
+      setFields({
+        title: data.title,
+        text: data.text,
+        tags: data.tags.join(", "),
+        imageUrl: data.imageUrl,
+      });
+    } catch (error) {
+      console.warn(error);
+      alert("Error when getting post!");
+    }
+  };
 
   const onChange = React.useCallback((field, value) => {
     setFields((prevForm) => ({
@@ -87,6 +89,7 @@ export const AddPost = () => {
       status: false,
       autosave: {
         enabled: true,
+        uniqueId: "react-autosave-textarea",
         delay: 1000,
       },
     }),
@@ -98,7 +101,7 @@ export const AddPost = () => {
       setIsLoading(true);
       const fieldsCopy = {
         ...fields,
-        tags: fields.tags.trim().split(", "),
+        tags: fields.tags,
       };
       const { data } = isEditing
         ? await axios.patch(`${_POSTS_ROUTE}/${id}${_EDIT_ROUTE}`, fieldsCopy)
@@ -113,7 +116,7 @@ export const AddPost = () => {
     }
   };
 
-  if (!isAuth && !token) {
+  if (!isUserAuthenticated && !token) {
     return <Navigate to={_HOME_ROUTE} />;
   }
 
