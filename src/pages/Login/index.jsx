@@ -10,12 +10,19 @@ import { userLogin } from "../../redux/actions/authActions";
 import { selectIsAuth } from "../../redux/slices/authSlice";
 import { _HOME_ROUTE } from "../../utils/constants";
 import styles from "./Login.module.scss";
+import { IconButton, InputAdornment } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 export const Login = () => {
   const isUserAuthenticated = useSelector(selectIsAuth);
   const dispatch = useDispatch();
 
   const { error, errorPath } = useSelector((state) => state.auth);
+
+  const [showPassword, setShowPassword] = React.useState(false);
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = () => setShowPassword(!showPassword);
+
 
   const {
     register,
@@ -57,7 +64,7 @@ export const Login = () => {
           className={styles.field}
           label="E-Mail"
           type="email"
-          error={Boolean(errors?.email?.message)}
+          error={Boolean(errors.email?.message)}
           helperText={errors.email?.message}
           {...register("email", { required: "Enter your email" })}
           fullWidth
@@ -65,10 +72,24 @@ export const Login = () => {
         <TextField
           className={styles.field}
           label="Password"
-          error={Boolean(errors?.password?.message)}
+          error={Boolean(errors.password?.message)}
           helperText={errors.password?.message}
           {...register("password", { required: "Enter your password" })}
           fullWidth
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                >
+                  {showPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+
         />
         <Button
           disabled={!isValid}
