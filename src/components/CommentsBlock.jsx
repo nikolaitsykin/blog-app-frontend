@@ -1,17 +1,17 @@
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import Avatar from "@mui/material/Avatar";
-import Divider from "@mui/material/Divider";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import Skeleton from "@mui/material/Skeleton";
-import React from "react";
-import { useSelector } from "react-redux";
-import axios from "../utils/axios";
-import { _COMMENTS_ROUTE } from "../utils/constants";
-import { SideBlock } from "./SideBlock";
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import Avatar from '@mui/material/Avatar';
+import Divider from '@mui/material/Divider';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Skeleton from '@mui/material/Skeleton';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import axios from '../utils/axios';
+import { _BASE_URL, _COMMENTS_ROUTE } from '../utils/constants';
+import { SideBlock } from './SideBlock';
 
 export const CommentsBlock = ({
   data,
@@ -21,10 +21,12 @@ export const CommentsBlock = ({
   authorId,
   isLoading = true,
 }) => {
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = React.useState('');
   const userDataId = useSelector((state) => state.auth.data?._id);
   const avatarUrl = useSelector((state) => state.auth.data?.avatarUrl);
-  const avatar = avatarUrl ? avatarUrl : "../../images/no_avatar.png";
+  const avatar = avatarUrl
+    ? _BASE_URL + avatarUrl
+    : '../../images/no_avatar.png';
 
   const removeComment = async (value) => {
     try {
@@ -40,7 +42,7 @@ export const CommentsBlock = ({
       await axios.post(`${_COMMENTS_ROUTE}/${data._id}`, fields);
     } catch (err) {
       console.warn(err);
-      alert("Error when deleting a comment!");
+      alert('Error when deleting a comment!');
     }
   };
 
@@ -58,7 +60,7 @@ export const CommentsBlock = ({
                 )}
               </ListItemAvatar>
               {isLoading ? (
-                <div style={{ display: "flex", flexDirection: "column" }}>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
                   <Skeleton variant="text" height={25} width={120} />
                   <Skeleton variant="text" height={18} width={230} />
                 </div>
@@ -71,13 +73,13 @@ export const CommentsBlock = ({
               )}
               {userDataId === authorId && userDataId !== undefined ? (
                 <ListItemIcon
-                  style={{ cursor: "pointer" }}
+                  style={{ cursor: 'pointer' }}
                   onClick={() => removeComment(obj.text)}
                 >
                   <DeleteForeverIcon />
                 </ListItemIcon>
               ) : (
-                ""
+                ''
               )}
             </ListItem>
             <Divider variant="inset" component="li" />
