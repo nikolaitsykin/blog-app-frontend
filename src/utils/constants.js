@@ -12,6 +12,6 @@ export const _EDIT_POST_ROUTE = "/posts/:id/edit";
 export const _EDIT_ROUTE = "/edit";
 export const _USER_ROUTE = "/users/:id";
 
-export const _BASE_URL = process.env._REACT_APP_API_URI;
+export const _BASE_URL = "https://blog-app-backend-1-mdas.onrender.com";
 export const _UPLOAD_URL = "/upload";
 export const _UPLOADS_URL = `/uploads`;
