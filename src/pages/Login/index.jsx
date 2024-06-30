@@ -72,7 +72,7 @@ export const Login = () => {
         <TextField
           className={styles.field}
           label="Password"
-          type="password"
+          type={showPassword ? 'text' : 'password'}
           error={Boolean(errors.password?.message)}
           helperText={errors.password?.message}
           {...register("password", { required: "Enter your password" })}
