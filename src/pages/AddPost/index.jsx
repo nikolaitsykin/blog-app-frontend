@@ -1,34 +1,34 @@
-import Button from "@mui/material/Button";
-import Paper from "@mui/material/Paper";
-import TextField from "@mui/material/TextField";
-import "easymde/dist/easymde.min.css";
-import React from "react";
-import { useSelector } from "react-redux";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
-import SimpleMDE from "react-simplemde-editor";
-import { selectIsAuth } from "../../redux/slices/authSlice";
-import axios from "../../utils/axios";
+import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
+import 'easymde/dist/easymde.min.css';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
+import SimpleMDE from 'react-simplemde-editor';
+import { selectIsAuth } from '../../redux/slices/authSlice';
+import axios from '../../utils/axios';
 import {
   _BASE_URL,
   _EDIT_ROUTE,
   _HOME_ROUTE,
   _POSTS_ROUTE,
   _UPLOAD_URL,
-} from "../../utils/constants";
-import styles from "./AddPost.module.scss";
+} from '../../utils/constants';
+import styles from './AddPost.module.scss';
 
 export const AddPost = () => {
   const navigate = useNavigate();
   const isUserAuthenticated = useSelector(selectIsAuth);
-  const token = window.localStorage.getItem("token");
+  const token = window.localStorage.getItem('token');
 
   const [isLoading, setIsLoading] = React.useState(false);
   const inputFileRef = React.useRef(null);
   const [fields, setFields] = React.useState({
-    title: "",
-    text: "",
-    tags: "",
-    imageUrl: "",
+    title: '',
+    text: '',
+    tags: '',
+    imageUrl: '',
   });
 
   const { id } = useParams();
@@ -46,12 +46,12 @@ export const AddPost = () => {
       setFields({
         title: data.title,
         text: data.text,
-        tags: data.tags.join(", "),
+        tags: data.tags.join(', '),
         imageUrl: data.imageUrl,
       });
     } catch (error) {
       console.warn(error);
-      alert("Error when getting post!");
+      alert('Error when getting post!');
     }
   };
 
@@ -66,30 +66,30 @@ export const AddPost = () => {
     try {
       const file = e.target.files[0];
       const formData = new FormData();
-      formData.append("image", file);
+      formData.append('image', file);
 
       const { data } = await axios.post(`${_UPLOAD_URL}`, formData);
       setFields((prev) => ({ ...prev, imageUrl: data.url }));
     } catch (error) {
       console.warn(error);
-      alert("Error upload file");
+      alert('Error upload file');
     }
   }, []);
 
   const onClickRemoveImage = React.useCallback(() => {
-    setFields((prev) => ({ ...prev, imageUrl: "" }));
+    setFields((prev) => ({ ...prev, imageUrl: '' }));
   }, []);
 
   const options = React.useMemo(
     () => ({
       spellChecker: false,
-      maxHeight: "200px",
+      maxHeight: '200px',
       autofocus: true,
-      placeholder: "Type here...",
+      placeholder: 'Type here...',
       status: false,
       autosave: {
         enabled: true,
-        uniqueId: "react-autosave-textarea",
+        uniqueId: 'react-autosave-textarea',
         delay: 1000,
       },
     }),
@@ -101,7 +101,7 @@ export const AddPost = () => {
       setIsLoading(true);
       const fieldsCopy = {
         ...fields,
-        tags: fields.tags.trim().split(" "),
+        tags: fields.tags.replace(/,/g, '').split(' '),
       };
       const { data } = isEditing
         ? await axios.patch(`${_POSTS_ROUTE}/${id}${_EDIT_ROUTE}`, fieldsCopy)
@@ -112,7 +112,7 @@ export const AddPost = () => {
       navigate(`${_POSTS_ROUTE}/${postId}`);
     } catch (error) {
       console.warn(error);
-      alert(isEditing ? "Error edit post" : "Error create post");
+      alert(isEditing ? 'Error edit post' : 'Error create post');
     }
   };
 
@@ -158,7 +158,7 @@ export const AddPost = () => {
       <TextField
         id="title"
         value={fields.title}
-        onChange={(e) => onChange("title", e.target.value)}
+        onChange={(e) => onChange('title', e.target.value)}
         classes={{ root: styles.title }}
         variant="standard"
         placeholder="Post title..."
@@ -167,7 +167,7 @@ export const AddPost = () => {
       <TextField
         id="tags"
         value={fields.tags}
-        onChange={(e) => onChange("tags", e.target.value)}
+        onChange={(e) => onChange('tags', e.target.value)}
         classes={{ root: styles.tags }}
         variant="standard"
         placeholder="Tags"
@@ -187,7 +187,7 @@ export const AddPost = () => {
           size="large"
           variant="contained"
         >
-          {isEditing ? "Save" : "Publish"}
+          {isEditing ? 'Save' : 'Publish'}
         </Button>
         <Link to="/">
           <Button size="large">Cancel</Button>
