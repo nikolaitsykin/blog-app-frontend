@@ -101,7 +101,7 @@ export const AddPost = () => {
       setIsLoading(true);
       const fieldsCopy = {
         ...fields,
-        tags: fields.tags.trim().split(", "),
+        tags: fields.tags.trim().split(" "),
       };
       const { data } = isEditing
         ? await axios.patch(`${_POSTS_ROUTE}/${id}${_EDIT_ROUTE}`, fieldsCopy)
