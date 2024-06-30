@@ -1,18 +1,18 @@
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import React from "react";
-import { useSelector } from "react-redux";
-import axios from "../../utils/axios";
-import { _COMMENTS_ROUTE } from "../../utils/constants";
-import styles from "./AddComment.module.scss";
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import axios from '../../utils/axios';
+import { _BASE_URL, _COMMENTS_ROUTE } from '../../utils/constants';
+import styles from './AddComment.module.scss';
 
 export const AddComment = ({ id, data, comments, setComments }) => {
   const userData = useSelector((state) => state.auth.data);
-  const [commentAdd, setCommentAdd] = React.useState("");
+  const [commentAdd, setCommentAdd] = React.useState('');
   const avatar = userData
-    ? `${userData.avatarUrl}`
-    : "../../images/no_avatar.png";
+    ? _BASE_URL + `${userData.avatarUrl}`
+    : '../../images/no_avatar.png';
 
   const writeComment = (event) => {
     setCommentAdd(event.target.value);
@@ -39,11 +39,11 @@ export const AddComment = ({ id, data, comments, setComments }) => {
         setComments(fields.comments);
 
         await axios.post(`${_COMMENTS_ROUTE}/${id}`, fields);
-        setCommentAdd("");
+        setCommentAdd('');
       }
     } catch (err) {
       console.warn(err);
-      alert("Error sending on backend comment!");
+      alert('Error sending on backend comment!');
     }
   };
 

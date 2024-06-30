@@ -1,19 +1,19 @@
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { IconButton, InputAdornment } from "@mui/material";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Paper from "@mui/material/Paper";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
-import React from "react";
-import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
-import { userRegister } from "../../redux/actions/authActions";
-import { selectIsAuth } from "../../redux/slices/authSlice";
-import axios from "../../utils/axios";
-import { _BASE_URL, _HOME_ROUTE, _UPLOAD_URL } from "../../utils/constants";
-import styles from "./Registration.module.scss";
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { IconButton, InputAdornment } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
+import { userRegister } from '../../redux/actions/authActions';
+import { selectIsAuth } from '../../redux/slices/authSlice';
+import axios from '../../utils/axios';
+import { _BASE_URL, _HOME_ROUTE, _UPLOAD_URL } from '../../utils/constants';
+import styles from './Registration.module.scss';
 
 export const Registration = React.memo(() => {
   const dispatch = useDispatch();
@@ -30,7 +30,7 @@ export const Registration = React.memo(() => {
     handleSubmit,
     setError,
     formState: { errors, isValid },
-  } = useForm({ mode: "onChange" });
+  } = useForm({ mode: 'onChange' });
 
   const onUpload = React.useCallback(() => {
     hiddenInputRef.current.click();
@@ -40,13 +40,13 @@ export const Registration = React.memo(() => {
     try {
       const file = e.target.files[0];
       const formData = new FormData();
-      formData.append("image", file);
+      formData.append('image', file);
 
       const { data } = await axios.post(`${_UPLOAD_URL}`, formData);
       setPreview(data.url);
     } catch (error) {
       console.warn(error);
-      alert("Error upload file");
+      alert('Error upload file');
     }
   }, []);
 
@@ -56,7 +56,7 @@ export const Registration = React.memo(() => {
         name,
         email,
         password,
-        avatarUrl: _BASE_URL + preview,
+        avatarUrl: preview,
       };
       dispatch(userRegister(data));
     },
@@ -66,13 +66,13 @@ export const Registration = React.memo(() => {
   React.useEffect(() => {
     if (error) {
       setError(`${errorPath}`, {
-        type: "custom",
+        type: 'custom',
         message: error,
       });
     }
   }, [error, errorPath, setError]);
 
-  const uploadButtonLabel = preview ? "Change image" : "Upload image";
+  const uploadButtonLabel = preview ? 'Change image' : 'Upload image';
 
   if (isUserAuthenticated) {
     return <Navigate to={_HOME_ROUTE} />;
@@ -86,7 +86,7 @@ export const Registration = React.memo(() => {
       <div className={styles.avatar}>
         <Avatar
           src={
-            preview ? `${_BASE_URL}${preview}` : "../../images/no_avatar.png"
+            preview ? `${_BASE_URL}${preview}` : '../../images/no_avatar.png'
           }
           sx={{ width: 100, height: 100 }}
         />
@@ -111,7 +111,7 @@ export const Registration = React.memo(() => {
           label="Full name"
           error={Boolean(errors.name?.message)}
           helperText={errors.name?.message}
-          {...register("name", { required: "Enter your name" })}
+          {...register('name', { required: 'Enter your name' })}
           fullWidth
         />
         <TextField
@@ -120,16 +120,16 @@ export const Registration = React.memo(() => {
           type="email"
           error={Boolean(errors.email?.message)}
           helperText={errors.email?.message}
-          {...register("email", { required: "Enter your email" })}
+          {...register('email', { required: 'Enter your email' })}
           fullWidth
         />
         <TextField
           className={styles.field}
           label="Password"
-          type={showPassword ? "text" : "password"}
+          type={showPassword ? 'text' : 'password'}
           error={Boolean(errors.password?.message)}
           helperText={errors.password?.message}
-          {...register("password", { required: "Enter your password" })}
+          {...register('password', { required: 'Enter your password' })}
           fullWidth
           InputProps={{
             endAdornment: (
