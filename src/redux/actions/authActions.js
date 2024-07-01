@@ -11,7 +11,6 @@ export const userLogin = createAsyncThunk(
   "auth/login",
   async (params, { rejectWithValue }) => {
     try {
-      // configure header's Content-Type as JSON
       const config = {
         headers: {
           "Content-Type": "application/json",

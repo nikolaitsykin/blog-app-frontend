@@ -54,7 +54,7 @@ export const CommentsBlock = ({
                 {isLoading ? (
                   <Skeleton variant="circular" width={40} height={40} />
                 ) : (
-                  <Avatar alt={obj.user.name} src={avatar} />
+                  <Avatar alt={obj.user.name} src={obj.user.avatarUrl || avatar} />
                 )}
               </ListItemAvatar>
               {isLoading ? (
