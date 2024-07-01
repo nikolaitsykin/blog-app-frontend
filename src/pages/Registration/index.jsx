@@ -15,7 +15,7 @@ import axios from '../../utils/axios';
 import { _BASE_URL, _HOME_ROUTE, _UPLOAD_URL } from '../../utils/constants';
 import styles from './Registration.module.scss';
 
-export const Registration = React.memo(() => {
+export const Registration = () => {
   const dispatch = useDispatch();
   const isUserAuthenticated = useSelector(selectIsAuth);
   const { error, errorPath } = useSelector((state) => state.auth);
@@ -157,4 +157,4 @@ export const Registration = React.memo(() => {
       </form>
     </Paper>
   );
-});
+};
