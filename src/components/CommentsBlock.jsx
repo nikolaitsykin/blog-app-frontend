@@ -24,9 +24,7 @@ export const CommentsBlock = ({
   const [value, setValue] = React.useState('');
   const userDataId = useSelector((state) => state.auth.data?._id);
   const avatarUrl = useSelector((state) => state.auth.data?.avatarUrl);
-  const avatar = avatarUrl
-    ? _BASE_URL + avatarUrl
-    : '../../images/no_avatar.png';
+  const avatar = _BASE_URL + avatarUrl || '../../images/no_avatar.png';
 
   const removeComment = async (value) => {
     try {
