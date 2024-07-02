@@ -25,5 +25,3 @@ Registration page
 Leveraged Redux for state management, including an action to fetch user data, posts, tags and comments.
 Stack: React, Redux, MongoDB, Express, Node, SASS, Git
 
-### https://blog-app-frontend-dun.vercel.app/
-
