@@ -23,7 +23,7 @@ export const TagsBlock = ({ items, isLoading = true }) => {
             to={`${_TAGS_ROUTE}/${tag}`}
             key={index}
           >
-            <ListItem key={index} disablePadding>
+            <ListItem key={index} cPadding>
               <ListItemButton>
                 <ListItemIcon>
                   <TagIcon />

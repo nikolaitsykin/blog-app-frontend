@@ -1,20 +1,20 @@
-import Grid from "@mui/material/Grid";
-import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import { CommentsBlock } from "../components/CommentsBlock";
-import { Post } from "../components/Post";
-import { TagsBlock } from "../components/TagsBlock";
+import Grid from '@mui/material/Grid';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { CommentsBlock } from '../components/CommentsBlock';
+import { Post } from '../components/Post';
+import { TagsBlock } from '../components/TagsBlock';
 import {
   fetchComments,
   fetchPosts,
   fetchSortByNewest,
   fetchSortByPopularity,
   fetchTags,
-} from "../redux/actions/postsActions";
-import { _BASE_URL } from "../utils/constants";
+} from '../redux/actions/postsActions';
+import { _BASE_URL } from '../utils/constants';
 
 export const Home = () => {
   const dispatch = useDispatch();
@@ -30,9 +30,9 @@ export const Home = () => {
 
   const commentsInPostsByTag = postsByTag.map((obj) => obj.comments).flat();
 
-  const isLoadingPosts = posts.status === "loading";
-  const isLoadingTags = tags.status === "loading";
-  const isLoadingComments = comments.status === "loading";
+  const isLoadingPosts = posts.status === 'loading';
+  const isLoadingTags = tags.status === 'loading';
+  const isLoadingComments = comments.status === 'loading';
 
   const handleTabChange = (_, newValue) => {
     setActiveTab(newValue);
