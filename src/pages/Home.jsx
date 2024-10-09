@@ -73,35 +73,38 @@ export const Home = () => {
       <Grid container spacing={1}>
         <Grid xs={12} sm={8} item>
           {postsByTag.map((post, index) =>
-          
             isLoadingPosts ? (
               <>
                 <Loader />
                 <Post key={index} isLoading={true} />
               </>
             ) : (
-              console.log(post),
-              <Post
-                key={index}
-                id={post._id}
-                title={post.title}
-                imageUrl={post.imageUrl ? `${_BASE_URL}${post.imageUrl}` : null}
-                user={post.user}
-                createdAt={post.createdAt}
-                viewsCount={post.viewsCount}
-                commentsCount={post.comments.length}
-                tags={post.tags}
-                isEditable={userData?._id === post.user._id}
-              />
+              (console.log(post),
+              (
+                <Post
+                  key={index}
+                  id={post._id}
+                  title={post.title}
+                  imageUrl={
+                    post.imageUrl ? `${_BASE_URL}${post.imageUrl}` : null
+                  }
+                  user={post.user}
+                  createdAt={post.createdAt}
+                  viewsCount={post.viewsCount}
+                  commentsCount={post.comments.length}
+                  tags={post.tags}
+                  isEditable={userData?._id === post.user._id}
+                />
+              ))
             )
           )}
         </Grid>
         <Grid xs={12} sm={4} item>
-          <TagsBlock items={tagList} isLoading={isLoadingTags} />
           <CommentsBlock
             comments={commentsInPostsByTag}
             isLoading={isLoadingComments}
           />
+          <TagsBlock items={tagList} isLoading={isLoadingTags} />
         </Grid>
       </Grid>
     </>
