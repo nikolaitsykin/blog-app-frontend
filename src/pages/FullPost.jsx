@@ -1,10 +1,11 @@
-import React from "react";
-import { useParams } from "react-router-dom";
-import { AddComment } from "../components/AddComment";
-import { CommentsBlock } from "../components/CommentsBlock";
-import { Post } from "../components/Post";
-import axios from "../utils/axios";
-import { _BASE_URL, _POSTS_ROUTE } from "../utils/constants";
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import { AddComment } from '../components/AddComment/AddComment';
+import { CommentsBlock } from '../components/CommentsBlock/CommentsBlock';
+import { Post } from '../components/Post/Post';
+import axios from '../utils/axios';
+import { _BASE_URL, _POSTS_ROUTE } from '../utils/constants';
+import Loader from '../components/Loader/Loader';
 
 export const FullPost = () => {
   const [post, setPost] = React.useState();
@@ -21,16 +22,22 @@ export const FullPost = () => {
     try {
       const { data } = await axios.get(`${_POSTS_ROUTE}/${id}`);
       setPost(data);
+      console.log(data);
       setComments(data.comments);
       setIsLoading(false);
     } catch (error) {
       console.warn(error);
-      alert("Error getting article");
+      alert('Error getting article');
     }
   };
 
   if (isLoading) {
-    return <Post isLoading={isLoading} isFullPost />;
+    return (
+      <>
+        <Loader />
+        <Post isLoading={isLoading} isFullPost />;
+      </>
+    );
   }
 
   return (

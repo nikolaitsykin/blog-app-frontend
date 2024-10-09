@@ -1,27 +1,31 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "../../utils/axios";
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import axios from '../../utils/axios';
 import {
   _AUTH_ME_ROUTE,
+  _BASE_URL,
   _LOGIN_ROUTE,
   _REGISTER_ROUTE,
-} from "../../utils/constants";
-
+} from '../../utils/constants';
 
 export const userLogin = createAsyncThunk(
-  "auth/login",
+  'auth/login',
   async (params, { rejectWithValue }) => {
     try {
       const config = {
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       };
-      const { data } = await axios.post(`${_LOGIN_ROUTE}`, params, config);
+      const { data } = await axios.post(
+        `${_BASE_URL + _LOGIN_ROUTE}`,
+        params,
+        config
+      );
       if (!data) {
-        return alert("Failed to login");
+        return alert('Failed to login');
       }
-      if ("token" in data) {
-        window.localStorage.setItem("token", data.token);
+      if ('token' in data) {
+        window.localStorage.setItem('token', data.token);
       }
       return data;
     } catch (error) {
@@ -37,21 +41,21 @@ export const userLogin = createAsyncThunk(
 );
 
 export const userRegister = createAsyncThunk(
-  "auth/register",
+  'auth/register',
   async (params, { rejectWithValue }) => {
     try {
       // configure header's Content-Type as JSON
       const config = {
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       };
       const { data } = await axios.post(`${_REGISTER_ROUTE}`, params, config);
       if (!data) {
-        return alert("Failed to register");
+        return alert('Failed to register');
       }
-      if ("token" in data) {
-        window.localStorage.setItem("token", data.token);
+      if ('token' in data) {
+        window.localStorage.setItem('token', data.token);
       }
       return data;
     } catch (error) {
@@ -66,7 +70,7 @@ export const userRegister = createAsyncThunk(
   }
 );
 
-export const fetchAuthMe = createAsyncThunk("auth/me", async () => {
+export const fetchAuthMe = createAsyncThunk('auth/me', async () => {
   const { data } = await axios.get(_AUTH_ME_ROUTE);
 
   return data;

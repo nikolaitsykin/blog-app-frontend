@@ -22,7 +22,6 @@ export const Header = () => {
     }
   };
 
-  const renderButtons = () => {};
 
   return (
     <div className={styles.root}>

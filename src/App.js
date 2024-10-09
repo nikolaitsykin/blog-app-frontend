@@ -1,10 +1,10 @@
-import Container from "@mui/material/Container";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { Navigate, Route, Routes } from "react-router-dom";
-import { Header } from "./components";
-import { AddPost, FullPost, Home, Login, Registration } from "./pages";
-import { fetchAuthMe } from "./redux/actions/authActions";
+import Container from '@mui/material/Container';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { Header } from './components/Header/Header';
+import { AddPost, FullPost, Home, Login, Registration } from './pages';
+import { fetchAuthMe } from './redux/actions/authActions';
 import {
   _ADD_POST_ROUTE,
   _EDIT_POST_ROUTE,
@@ -13,7 +13,7 @@ import {
   _POST_ROUTE,
   _REGISTER_ROUTE,
   _TAGS_ID_ROUTE,
-} from "./utils/constants";
+} from './utils/constants';
 
 function App() {
   const dispatch = useDispatch();

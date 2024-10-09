@@ -4,9 +4,9 @@ import Tabs from '@mui/material/Tabs';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { CommentsBlock } from '../components/CommentsBlock';
-import { Post } from '../components/Post';
-import { TagsBlock } from '../components/TagsBlock';
+import { CommentsBlock } from '../components/CommentsBlock/CommentsBlock';
+import { Post } from '../components/Post/Post';
+import { TagsBlock } from '../components/TagsBlock/TagsBlock';
 import {
   fetchComments,
   fetchPosts,
@@ -15,6 +15,7 @@ import {
   fetchTags,
 } from '../redux/actions/postsActions';
 import { _BASE_URL } from '../utils/constants';
+import Loader from '../components/Loader/Loader';
 
 export const Home = () => {
   const dispatch = useDispatch();
@@ -66,15 +67,20 @@ export const Home = () => {
         value={activeTab}
         aria-label="basic tabs example"
       >
-        <Tab onClick={onSortByNewest} label="New" />
-        <Tab onClick={onSortByPopularity} label="Popular" />
+        <Tab key={0} onClick={onSortByNewest} label="New" />
+        <Tab key={1} onClick={onSortByPopularity} label="Popular" />
       </Tabs>
       <Grid container spacing={1}>
-        <Grid xs={8} item>
+        <Grid xs={12} sm={8} item>
           {postsByTag.map((post, index) =>
+          
             isLoadingPosts ? (
-              <Post key={index} isLoading={true} />
+              <>
+                <Loader />
+                <Post key={index} isLoading={true} />
+              </>
             ) : (
+              console.log(post),
               <Post
                 key={index}
                 id={post._id}
@@ -90,7 +96,7 @@ export const Home = () => {
             )
           )}
         </Grid>
-        <Grid xs={4} item>
+        <Grid xs={12} sm={4} item>
           <TagsBlock items={tagList} isLoading={isLoadingTags} />
           <CommentsBlock
             comments={commentsInPostsByTag}

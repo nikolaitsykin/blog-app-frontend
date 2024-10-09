@@ -9,9 +9,9 @@ import ListItemText from '@mui/material/ListItemText';
 import Skeleton from '@mui/material/Skeleton';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import axios from '../utils/axios';
-import { _BASE_URL, _COMMENTS_ROUTE } from '../utils/constants';
-import { SideBlock } from './SideBlock';
+import axios from '../../utils/axios';
+import { _BASE_URL, _COMMENTS_ROUTE } from '../../utils/constants';
+import { SideBlock } from '../SideBlock/SideBlock';
 
 export const CommentsBlock = ({
   data,
