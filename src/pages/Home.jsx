@@ -79,23 +79,18 @@ export const Home = () => {
                 <Post key={index} isLoading={true} />
               </>
             ) : (
-              (console.log(post),
-              (
-                <Post
-                  key={index}
-                  id={post._id}
-                  title={post.title}
-                  imageUrl={
-                    post.imageUrl ? `${_BASE_URL}${post.imageUrl}` : null
-                  }
-                  user={post.user}
-                  createdAt={post.createdAt}
-                  viewsCount={post.viewsCount}
-                  commentsCount={post.comments.length}
-                  tags={post.tags}
-                  isEditable={userData?._id === post.user._id}
-                />
-              ))
+              <Post
+                key={index}
+                id={post._id}
+                title={post.title}
+                imageUrl={post.imageUrl ? `${_BASE_URL}${post.imageUrl}` : null}
+                user={post.user}
+                createdAt={post.createdAt}
+                viewsCount={post.viewsCount}
+                commentsCount={post.comments.length}
+                tags={post.tags}
+                isEditable={userData?._id === post.user._id}
+              />
             )
           )}
         </Grid>
