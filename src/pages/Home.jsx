@@ -73,19 +73,16 @@ export const Home = () => {
         <Grid xs={12} sm={8} item>
           {postsByTag.map((post, index) =>
             isLoadingPosts ? (
-              (console.log(post.imageUrl),
-              (
-                <>
-                  {/* <Loader /> */}
-                  <Post key={index} isLoading={true} />
-                </>
-              ))
+              <>
+                {/* <Loader /> */}
+                <Post key={index} isLoading={true} />
+              </>
             ) : (
               <Post
                 key={index}
                 id={post._id}
                 title={post.title}
-                imageUrl={_BASE_URL + post.imageUrl}
+                imageUrl={post.imageUrl ? _BASE_URL + post.imageUrl : null}
                 user={post.user}
                 createdAt={post.createdAt}
                 viewsCount={post.viewsCount}
