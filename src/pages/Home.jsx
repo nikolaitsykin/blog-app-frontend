@@ -21,7 +21,7 @@ export const Home = () => {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.auth.data);
   const { posts, tags, comments } = useSelector((state) => state.posts);
-  const [activeTab, setActiveTab] = React.useState(0);
+  const [activeTab, setActiveTab] = React.useState(1);
   const [tagList, setTagList] = React.useState([]);
 
   const tag = useParams();
@@ -51,7 +51,7 @@ export const Home = () => {
     dispatch(fetchPosts());
     dispatch(fetchTags());
     dispatch(fetchComments());
-    dispatch(fetchSortByNewest());
+    onSortByPopularity();
   }, []);
 
   useEffect(() => {
@@ -65,7 +65,7 @@ export const Home = () => {
       <Tabs
         onChange={handleTabChange}
         value={activeTab}
-        aria-label="basic tabs example"
+        aria-label="sorting tabs"
       >
         <Tab key={0} onClick={onSortByNewest} label="New" />
         <Tab key={1} onClick={onSortByPopularity} label="Popular" />
@@ -90,7 +90,9 @@ export const Home = () => {
                 commentsCount={post.comments.length}
                 tags={post.tags}
                 isEditable={userData?._id === post.user._id}
-              />
+              >
+                {post.text.slice(0, 100)}...
+              </Post>
             )
           )}
         </Grid>
