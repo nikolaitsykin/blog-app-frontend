@@ -1,11 +1,12 @@
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 import { useParams } from 'react-router-dom';
 import { AddComment } from '../components/AddComment/AddComment';
 import { CommentsBlock } from '../components/CommentsBlock/CommentsBlock';
+import Loader from '../components/Loader/Loader';
 import { Post } from '../components/Post/Post';
 import axios from '../utils/axios';
 import { _BASE_URL, _POSTS_ROUTE } from '../utils/constants';
-import Loader from '../components/Loader/Loader';
 
 export const FullPost = () => {
   const [post, setPost] = React.useState();
@@ -55,7 +56,7 @@ export const FullPost = () => {
         isEditable
         isFullPost
       >
-        <p>{post.text}</p>
+        <ReactMarkdown children={post.text} />
       </Post>
       <CommentsBlock
         data={post}

@@ -13,5 +13,6 @@ export const _EDIT_ROUTE = '/edit';
 export const _USER_ROUTE = '/users/:id';
 
 export const _BASE_URL = 'https://blog-app-backend-1-mdas.onrender.com';
+export const _BASE_URL_IMAGE = 'https://blog-app-backend-1-mdas.onrender.com';
 export const _UPLOAD_URL = '/upload';
 export const _UPLOADS_URL = '/uploads';
