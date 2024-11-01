@@ -46,7 +46,7 @@ export const AddPost = () => {
       setFields({
         title: data.title,
         text: data.text,
-        tags: data.tags.join(', '),
+        tags: data.tags.join(', ').toLowerCase(),
         imageUrl: data.imageUrl,
       });
     } catch (error) {
