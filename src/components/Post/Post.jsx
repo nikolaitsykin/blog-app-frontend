@@ -21,7 +21,6 @@ import { PostSkeleton } from './Skeleton';
 export const Post = ({
   id,
   title,
-  text,
   createdAt,
   imageUrl,
   user,

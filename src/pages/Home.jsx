@@ -21,14 +21,12 @@ export const Home = () => {
   const userData = useSelector((state) => state.auth.data);
   const { posts, tags, comments } = useSelector((state) => state.posts);
   const [activeTab, setActiveTab] = React.useState(1);
-  const [tagList, setTagList] = React.useState([]);
 
   const tag = useParams();
-  const postsByTag = tag.id
+  const filteredPosts = tag.id
     ? posts.items.filter((obj) => obj.tags.includes(tag.id))
     : posts.items;
-
-  const commentsInPostsByTag = postsByTag.map((obj) => obj.comments).flat();
+  const filteredComments = filteredPosts.map((obj) => obj.comments).flat();
 
   const isLoadingPosts = posts.status === 'loading';
   const isLoadingTags = tags.status === 'loading';
@@ -50,14 +48,15 @@ export const Home = () => {
     dispatch(fetchPosts());
     dispatch(fetchTags());
     dispatch(fetchComments());
-    onSortByPopularity();
+    dispatch(fetchSortByPopularity());
   }, []);
 
-  useEffect(() => {
-    const allTags = posts.items.flatMap((post) => post.tags);
-    const uniqueTags = [...new Set(allTags)];
-    setTagList(uniqueTags);
-  }, [posts.items]);
+  // const [tagList, setTagList] = React.useState([]);
+  // useEffect(() => {
+  //   const allTags = posts.items.flatMap((post) => post.tags);
+  //   const uniqueTags = [...new Set(allTags)];
+  //   setTagList(uniqueTags);
+  // }, [posts.items]);
 
   return (
     <>
@@ -71,12 +70,9 @@ export const Home = () => {
       </Tabs>
       <Grid container spacing={1}>
         <Grid xs={12} sm={8} item>
-          {postsByTag.map((post, index) =>
+          {filteredPosts.map((post, index) =>
             isLoadingPosts ? (
-              <>
-                {/* <Loader /> */}
-                <Post key={index} isLoading={true} />
-              </>
+              <Post key={index} isLoading={true} />
             ) : (
               <Post
                 key={index}
@@ -97,10 +93,10 @@ export const Home = () => {
         </Grid>
         <Grid xs={12} sm={4} item>
           <CommentsBlock
-            comments={commentsInPostsByTag}
+            comments={filteredComments}
             isLoading={isLoadingComments}
           />
-          <TagsBlock items={tagList} isLoading={isLoadingTags} />
+          <TagsBlock items={tags.items} isLoading={isLoadingTags} />
         </Grid>
       </Grid>
     </>
