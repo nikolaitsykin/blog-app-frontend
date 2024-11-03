@@ -26,6 +26,10 @@ Stack: MongoDB, ExpressJS, React JS, NodeJS, SASS.
 Deployment: https://blog-app-frontend-dun.vercel.app/
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 57f3b9b (readme update)
 The main page
 ![Main page](src/images/main_page.png)
 
