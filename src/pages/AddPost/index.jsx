@@ -12,8 +12,7 @@ import {
   _BASE_URL,
   _EDIT_ROUTE,
   _HOME_ROUTE,
-  _POSTS_ROUTE,
-  _UPLOAD_URL,
+  _POSTS_ROUTE
 } from '../../utils/constants';
 import styles from './AddPost.module.scss';
 
@@ -34,26 +33,22 @@ export const AddPost = () => {
   const { id } = useParams();
   const isEditing = Boolean(id);
 
-  React.useEffect(() => {
-    if (id) {
-      fetchPost();
-    }
-  }, []);
-
-  const fetchPost = async () => {
+  const handleChangeFile = async (event) => {
     try {
-      const { data } = await axios.get(`${_POSTS_ROUTE}/${id}`);
-      setFields({
-        title: data.title,
-        text: data.text,
-        tags: data.tags.join(', ').toLowerCase(),
-        imageUrl: data.imageUrl,
-      });
-    } catch (error) {
-      console.warn(error);
-      alert('Error when getting post!');
+      const formData = new FormData();
+      const file = event.target.files[0];
+      formData.append("image", file);
+      const { data } = await axios.post("/upload", formData);
+      setFields((prev) => ({ ...prev, imageUrl: data.url }));
+    } catch (err) {
+      console.warn(err);
+      alert("Error when loading file!");
     }
   };
+
+  const onClickRemoveImage = React.useCallback(() => {
+    setFields((prev) => ({ ...prev, imageUrl: '' }));
+  }, []);
 
   const onChange = React.useCallback((field, value) => {
     setFields((prevForm) => ({
@@ -62,23 +57,25 @@ export const AddPost = () => {
     }));
   }, []);
 
-  const handleChangeFile = React.useCallback(async (e) => {
-    try {
-      const file = e.target.files[0];
-      const formData = new FormData();
-      formData.append('image', file);
-
-      const { data } = await axios.post(`${_UPLOAD_URL}`, formData);
-      setFields((prev) => ({ ...prev, imageUrl: data.url }));
-    } catch (error) {
-      console.warn(error);
-      alert('Error upload file');
+  React.useEffect(() => {
+    if (id) {
+      axios
+        .get(`/posts/${id}`)
+        .then(({ data }) => {
+          setFields({
+            title: data.title,
+            text: data.text,
+            tags: data.tags.join(', ').toLowerCase(),
+            imageUrl: data.imageUrl,
+          });
+          console.log(data.imageUrl);
+        })
+        .catch((err) => {
+          console.warn(err);
+          alert('Error when getting post!');
+        });
     }
-  }, []);
-
-  const onClickRemoveImage = React.useCallback(() => {
-    setFields((prev) => ({ ...prev, imageUrl: '' }));
-  }, []);
+  }, [id]);
 
   const options = React.useMemo(
     () => ({

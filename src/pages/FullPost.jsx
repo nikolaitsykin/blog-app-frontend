@@ -11,7 +11,8 @@ export const FullPost = () => {
   const [post, setPost] = React.useState();
   const [comments, setComments] = React.useState();
   const [isLoading, setIsLoading] = React.useState(true);
-  const isImage = post?.imageUrl ? `${_BASE_URL}${post.imageUrl}` : null;
+  const isImage = post?.imageUrl ? `${_BASE_URL}${post?.imageUrl}` : '';
+
   const { id } = useParams();
 
   React.useEffect(() => {
