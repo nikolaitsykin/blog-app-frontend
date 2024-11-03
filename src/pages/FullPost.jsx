@@ -6,7 +6,6 @@ import { CommentsBlock } from '../components/CommentsBlock/CommentsBlock';
 import { Post } from '../components/Post/Post';
 import axios from '../utils/axios';
 import { _BASE_URL, _POSTS_ROUTE } from '../utils/constants';
-import { formatDate } from '../utils/heplers';
 
 export const FullPost = () => {
   const [post, setPost] = React.useState();
@@ -47,7 +46,7 @@ export const FullPost = () => {
         title={post.title}
         imageUrl={isImage}
         user={post.user}
-        createdAt={formatDate(post.createdAt)}
+        createdAt={post.createdAt}
         viewsCount={post.viewsCount}
         commentsCount={post.comments.length}
         tags={post.tags}
